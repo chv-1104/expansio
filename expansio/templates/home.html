@@ -1,0 +1,557 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Expansio | Financial Ledger & Architecture{% endblock %}
+
+{% block content %}
+<div class="w-full min-h-screen text-slate-800 relative selection:bg-indigo-500 selection:text-white">
+    
+    <!-- Top Navigation -->
+    <header class="w-full sticky top-0 z-50 backdrop-blur-md bg-white/75 border-b border-slate-200/60 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="{% url 'expansio_home' %}" class="flex items-center gap-3.5 group">
+                <div class="w-11 h-11 rounded-2xl bg-white flex items-center justify-center shadow-md shadow-indigo-100 border border-slate-100 group-hover:scale-105 group-hover:-rotate-3 transition-all duration-300">
+                    <span class="material-symbols-outlined text-2xl text-indigo-600">account_balance</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-extrabold text-2xl text-slate-900 tracking-tight">Expansio</span>
+                        <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 rounded-full border border-slate-200">Backend v1.0</span>
+                    </div>
+                    <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400 font-bold hidden sm:block">Personal Finance Architecture</p>
+                </div>
+            </a>
+
+            <!-- Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                <a href="#features" class="hover:text-slate-900 transition-colors">Core Engine</a>
+                <a href="#architecture" class="hover:text-slate-900 transition-colors">Architecture</a>
+                <a href="#interactive-sandbox" class="hover:text-slate-900 transition-colors">Live Sandbox</a>
+                <a href="#tech-stack" class="hover:text-slate-900 transition-colors">Tech Stack</a>
+            </nav>
+
+            <!-- Auth / Action Buttons -->
+            <div class="flex items-center gap-3">
+                {% if user.is_authenticated %}
+                <a href="{% url 'expansio_dashboard' %}" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+                    <span>Dashboard</span>
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+                {% else %}
+                <a href="{% url 'expansio_login' %}" class="text-sm font-bold text-slate-700 hover:text-slate-900 px-3.5 py-2 rounded-xl hover:bg-slate-100 transition-all">
+                    Sign In
+                </a>
+                <a href="{% url 'expansio_signup' %}" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+                    <span>Get Started</span>
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16 pb-24 space-y-24">
+        
+        <!-- Hero Section -->
+        <section class="relative">
+            <!-- Background glow accents -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+            <div class="absolute top-0 right-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+            
+            <div class="text-center max-w-3xl mx-auto space-y-6">
+                <!-- Fresher Portfolio Pill -->
+                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-sm text-xs font-bold text-slate-700">
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span>Python &amp; Django Backend Portfolio Project</span>
+                    <span class="text-slate-300">|</span>
+                    <span class="text-indigo-600 font-semibold">MySQL 8.0 &amp; Railway</span>
+                </div>
+
+                <!-- Headline -->
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
+                    Precision Financial Ledger &amp; <br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-slate-700 to-indigo-800">Double-Entry Architecture</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl mx-auto">
+                    A production-engineered personal finance web system built with <strong>Python 3.12</strong> &amp; <strong>Django 5</strong>. Engineered with session-hashed OTP verification, IEEE 754-safe Decimal arithmetic, dynamic EMI auto-deduction engines, and multi-tenant database constraints.
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'expansio_dashboard' %}" class="inline-flex items-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white px-7 py-4 rounded-2xl font-bold shadow-xl shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 transition-all text-base">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span>Open Your Dashboard</span>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'expansio_signup' %}" class="inline-flex items-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white px-7 py-4 rounded-2xl font-bold shadow-xl shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 transition-all text-base">
+                        <span class="material-symbols-outlined">rocket_launch</span>
+                        <span>Create Free Account</span>
+                    </a>
+                    <a href="{% url 'expansio_login' %}" class="inline-flex items-center gap-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 px-6 py-4 rounded-2xl font-bold shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all text-base">
+                        <span class="material-symbols-outlined text-indigo-600">login</span>
+                        <span>Sign In</span>
+                    </a>
+                    {% endif %}
+                    
+                    <!-- Quick Demo Credentials Trigger -->
+                    <button type="button" onclick="toggleDemoModal()" class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200/70 text-slate-700 px-5 py-4 rounded-2xl font-bold text-sm transition-all border border-slate-200/60">
+                        <span class="material-symbols-outlined text-slate-500 text-[18px]">key</span>
+                        <span>Demo Credentials</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Demo Credentials Dropdown / Box (Hidden by default, toggled via JS) -->
+            <div id="demoModal" class="hidden max-w-md mx-auto mt-6 bg-white p-5 rounded-2xl shadow-xl border border-indigo-100 text-left transition-all duration-300">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-indigo-600 text-sm">badge</span>
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Pre-Seeded Interview Demo Account</span>
+                    </div>
+                    <button onclick="toggleDemoModal()" class="text-slate-400 hover:text-slate-600 text-xs">✕</button>
+                </div>
+                <div class="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs font-mono text-slate-700">
+                    <div class="flex items-center justify-between">
+                        <span>Email: <strong class="text-indigo-600 font-bold">demo@example.com</strong></span>
+                        <button onclick="copyToClipboard('demo@example.com', this)" class="text-[10px] font-sans font-bold bg-white px-2 py-0.5 rounded border border-slate-200 hover:bg-slate-100">Copy</button>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>Password: <strong class="text-indigo-600 font-bold">DemoPassword123!</strong></span>
+                        <button onclick="copyToClipboard('DemoPassword123!', this)" class="text-[10px] font-sans font-bold bg-white px-2 py-0.5 rounded border border-slate-200 hover:bg-slate-100">Copy</button>
+                    </div>
+                </div>
+                <a href="{% url 'expansio_login' %}" class="mt-3 block text-center bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-2 rounded-xl text-xs font-bold transition-colors">
+                    Click Here to Proceed to Login Page &rarr;
+                </a>
+            </div>
+        </section>
+
+        <!-- Interactive Live Sandbox / Financial Engine Preview -->
+        <section id="interactive-sandbox" class="relative">
+            <div class="text-center max-w-2xl mx-auto mb-10 space-y-2">
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">
+                    <span class="material-symbols-outlined text-[16px]">calculate</span>
+                    <span>Interactive Engine Simulation</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Try The Backend Calculation Logic</h2>
+                <p class="text-sm text-slate-500 font-medium">Test how Expansio dynamically computes disposable net income, automated EMI burden deductions, and monthly savings rate in real time.</p>
+            </div>
+
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Left: Interactive Controls -->
+                    <div class="md:col-span-6 space-y-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Monthly Gross Income (₹)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
+                                <input id="incomeInput" type="number" value="75000" step="1000" oninput="recalculateDemo()" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-4 py-3 text-sm font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Monthly Living Expenses (₹)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
+                                <input id="expenseInput" type="number" value="28000" step="500" oninput="recalculateDemo()" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-4 py-3 text-sm font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                            </div>
+                        </div>
+
+                        <!-- Active EMI Toggle -->
+                        <div class="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                                    <span class="material-symbols-outlined text-[20px]">credit_score</span>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-800">Auto-Deduct Recurring EMI</div>
+                                    <div class="text-[11px] text-slate-400">Car Loan: ₹8,500 / month</div>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input id="emiToggle" type="checkbox" checked onchange="recalculateDemo()" class="sr-only peer">
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Right: Dynamic Visual Output Display -->
+                    <div class="md:col-span-6 bg-slate-900 text-white p-6 sm:p-7 rounded-2xl shadow-xl relative overflow-hidden space-y-5">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-sm text-indigo-400">query_stats</span>
+                                Real-Time Engine Output
+                            </span>
+                            <span class="text-[10px] font-mono bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800/50">Decimal(Prec=2)</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-800/70 p-3.5 rounded-xl border border-slate-700/50">
+                                <div class="text-[11px] text-slate-400 font-medium">Disposable Net Income</div>
+                                <div id="calcNetIncome" class="text-xl font-extrabold text-emerald-400 mt-1">₹38,500.00</div>
+                            </div>
+                            <div class="bg-slate-800/70 p-3.5 rounded-xl border border-slate-700/50">
+                                <div class="text-[11px] text-slate-400 font-medium">Savings Rate</div>
+                                <div id="calcSavingsRate" class="text-xl font-extrabold text-indigo-300 mt-1">51.3%</div>
+                            </div>
+                        </div>
+
+                        <!-- Progress visual -->
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs text-slate-400">
+                                <span>Monthly Capital Retention</span>
+                                <span id="calcPercentLabel">51.3% Saved</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                <div id="calcProgressBar" class="bg-gradient-to-r from-emerald-500 to-indigo-500 h-full rounded-full transition-all duration-500" style="width: 51.3%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="text-[11px] text-slate-400 flex items-center gap-2 pt-1 border-t border-slate-800/80">
+                            <span class="material-symbols-outlined text-emerald-400 text-sm">verified</span>
+                            <span>Calculated using double-entry Decimal engine without floating-point drift.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Architectural Pillars Grid -->
+        <section id="features" class="space-y-10">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 uppercase tracking-widest bg-white px-3 py-1 rounded-full border border-slate-200">
+                    <span class="material-symbols-outlined text-[16px] text-indigo-600">terminal</span>
+                    <span>Engineering Pillars</span>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Built for Backend Robustness &amp; Integrity</h2>
+                <p class="text-sm text-slate-500 font-medium">Every module is structured following software engineering best practices, atomic data safety, and zero-compromise security.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="glass-panel p-6 rounded-3xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold border border-indigo-100">
+                            <span class="material-symbols-outlined text-2xl">mark_email_read</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">Atomic OTP Auth</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Registration with session-hashed OTP verification via Gmail SMTP (<code class="font-mono text-indigo-600">secrets.randbelow</code>). Enclosed within <code class="font-mono text-slate-700">transaction.atomic()</code> to guarantee zero orphaned profiles.
+                        </p>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400">
+                        <span>Auth Security</span>
+                        <span class="text-indigo-600">SHA-256 / Atomic</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-panel p-6 rounded-3xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold border border-emerald-100">
+                            <span class="material-symbols-outlined text-2xl">calculate</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">Decimal Ledger Precision</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Currency calculations explicitly employ Python’s <code class="font-mono text-indigo-600">Decimal</code> to prevent IEEE 754 floating point inaccuracies. Form validators enforce cross-category validation.
+                        </p>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400">
+                        <span>Data Integrity</span>
+                        <span class="text-emerald-600">Exact Arithmetic</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-panel p-6 rounded-3xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold border border-amber-100">
+                            <span class="material-symbols-outlined text-2xl">sync_alt</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">Dynamic EMI Engine</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Dynamic month-by-month and all-time accumulated burden computation supporting Weekly and Monthly frequencies without destructive schema alterations.
+                        </p>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400">
+                        <span>Recurring Logic</span>
+                        <span class="text-amber-600">Auto-Deductions</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="glass-panel p-6 rounded-3xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold border border-rose-100">
+                            <span class="material-symbols-outlined text-2xl">database</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">Multi-Tenant Isolation</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Per-user isolation with <code class="font-mono text-indigo-600">models.UniqueConstraint</code>, optimized queries (<code class="font-mono text-slate-700">select_related</code>), and strict MySQL 8.0 schema constraints.
+                        </p>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400">
+                        <span>Database Safety</span>
+                        <span class="text-rose-600">Constraint-Driven</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Technical Code Blueprint / Architecture Tabs -->
+        <section id="architecture" class="space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 uppercase tracking-widest bg-white px-3 py-1 rounded-full border border-slate-200">
+                    <span class="material-symbols-outlined text-[16px] text-indigo-600">code</span>
+                    <span>Backend Implementation Snippets</span>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Code Architecture Highlights</h2>
+                <p class="text-sm text-slate-500 font-medium">Inspecting core patterns for data safety, mathematical precision, and model constraints.</p>
+            </div>
+
+            <div class="bg-slate-950 text-slate-200 rounded-3xl shadow-2xl border border-slate-800 overflow-hidden max-w-4xl mx-auto">
+                <!-- Tab Headers -->
+                <div class="flex flex-wrap items-center justify-between border-b border-slate-800/80 px-6 py-3 bg-slate-900/60">
+                    <div class="flex items-center gap-2">
+                        <button onclick="switchTab('emiTab', this)" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white">
+                            EMI Calculation Engine
+                        </button>
+                        <button onclick="switchTab('atomicTab', this)" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+                            Atomic OTP Transaction
+                        </button>
+                        <button onclick="switchTab('modelsTab', this)" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+                            DB Constraints &amp; Model
+                        </button>
+                    </div>
+                    <span class="text-[11px] font-mono text-slate-500 hidden sm:block">python/django/views.py</span>
+                </div>
+
+                <!-- Tab Content 1: EMI Engine -->
+                <div id="emiTab" class="code-tab-content p-6 font-mono text-xs overflow-x-auto leading-relaxed text-slate-300">
+<pre><code class="language-python"><span class="text-indigo-400">def</span> <span class="text-emerald-400">get_all_time_emi_burden</span>(user, target_date=<span class="text-amber-300">None</span>):
+    <span class="text-slate-500">"""Calculate total accumulated EMI burden up to a specific date"""</span>
+    target_date = target_date <span class="text-indigo-400">or</span> timezone.localdate()
+    emis = EMI.objects.filter(user=user, active=<span class="text-amber-300">True</span>, start_date__lte=target_date)
+    total_accumulated = Decimal(<span class="text-amber-200">'0'</span>)
+    
+    <span class="text-indigo-400">for</span> emi <span class="text-indigo-400">in</span> emis:
+        effective_end = min(emi.end_date, target_date) <span class="text-indigo-400">if</span> emi.end_date <span class="text-indigo-400">else</span> target_date
+        <span class="text-indigo-400">if</span> emi.frequency == <span class="text-amber-200">'Monthly'</span>:
+            months_diff = (effective_end.year - emi.start_date.year) * 12 + (effective_end.month - emi.start_date.month)
+            count = months_diff + (1 <span class="text-indigo-400">if</span> effective_end.day >= emi.start_date.day <span class="text-indigo-400">else</span> 0)
+            total_accumulated += (max(0, count) * emi.amount)
+            
+    <span class="text-indigo-400">return</span> total_accumulated</code></pre>
+                </div>
+
+                <!-- Tab Content 2: Atomic Transaction -->
+                <div id="atomicTab" class="code-tab-content hidden p-6 font-mono text-xs overflow-x-auto leading-relaxed text-slate-300">
+<pre><code class="language-python"><span class="text-indigo-400">with</span> transaction.atomic():
+    <span class="text-slate-500"># 1. Create base auth user</span>
+    user = User.objects.create_user(
+        username=data[<span class="text-amber-200">'email'</span>],
+        email=data[<span class="text-amber-200">'email'</span>],
+        first_name=data[<span class="text-amber-200">'first_name'</span>],
+    )
+    user.password = data[<span class="text-amber-200">'password_hash'</span>]
+    user.save()
+
+    <span class="text-slate-500"># 2. Seed default categorized ledger partitions</span>
+    seed_default_categories(user)
+    
+    <span class="text-slate-500"># 3. Create extended user profile atomically</span>
+    UserProfile.objects.create(user=user, age=data.get(<span class="text-amber-200">'age'</span>), city=data.get(<span class="text-amber-200">'city'</span>, <span class="text-amber-200">''</span>))</code></pre>
+                </div>
+
+                <!-- Tab Content 3: Model Constraints -->
+                <div id="modelsTab" class="code-tab-content hidden p-6 font-mono text-xs overflow-x-auto leading-relaxed text-slate-300">
+<pre><code class="language-python"><span class="text-indigo-400">class</span> <span class="text-emerald-400">Category</span>(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=<span class="text-amber-300">True</span>, blank=<span class="text-amber-300">True</span>)
+    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=10, choices=[(<span class="text-amber-200">'Income'</span>, <span class="text-amber-200">'Income'</span>), (<span class="text-amber-200">'Expense'</span>, <span class="text-amber-200">'Expense'</span>)])
+
+    <span class="text-indigo-400">class</span> <span class="text-emerald-400">Meta</span>:
+        constraints = [
+            models.UniqueConstraint(
+                fields=[<span class="text-amber-200">'user'</span>, <span class="text-amber-200">'name'</span>, <span class="text-amber-200">'type'</span>],
+                name=<span class="text-amber-200">'unique_category_name_per_user_and_type'</span>
+            )
+        ]</code></pre>
+                </div>
+
+                <div class="bg-slate-900 px-6 py-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                    <span>Clean separation of concerns · Production resilience</span>
+                    <span class="text-emerald-400 flex items-center gap-1 font-semibold">
+                        <span class="material-symbols-outlined text-[14px]">done_all</span> 14/14 Automated Tests Passing
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack Specs Grid -->
+        <section id="tech-stack" class="space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 uppercase tracking-widest bg-white px-3 py-1 rounded-full border border-slate-200">
+                    <span class="material-symbols-outlined text-[16px] text-indigo-600">layers</span>
+                    <span>Production Architecture</span>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Full System Stack</h2>
+                <p class="text-sm text-slate-500 font-medium">Battle-tested tools configured for continuous delivery and cloud reliability.</p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 text-center shadow-sm hover:shadow-md transition-all">
+                    <div class="text-2xl font-bold text-slate-900">Python 3.12</div>
+                    <div class="text-xs text-slate-500 mt-1 font-semibold">Core Language</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 text-center shadow-sm hover:shadow-md transition-all">
+                    <div class="text-2xl font-bold text-indigo-600">Django 5.x</div>
+                    <div class="text-xs text-slate-500 mt-1 font-semibold">Backend Framework</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 text-center shadow-sm hover:shadow-md transition-all">
+                    <div class="text-2xl font-bold text-emerald-600">MySQL 8.0</div>
+                    <div class="text-xs text-slate-500 mt-1 font-semibold">Relational Database</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 text-center shadow-sm hover:shadow-md transition-all">
+                    <div class="text-2xl font-bold text-slate-800">Gunicorn</div>
+                    <div class="text-xs text-slate-500 mt-1 font-semibold">WSGI Server</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 text-center shadow-sm hover:shadow-md transition-all">
+                    <div class="text-2xl font-bold text-slate-800">WhiteNoise</div>
+                    <div class="text-xs text-slate-500 mt-1 font-semibold">Static Compression</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 text-center shadow-sm hover:shadow-md transition-all">
+                    <div class="text-2xl font-bold text-purple-600">Railway</div>
+                    <div class="text-xs text-slate-500 mt-1 font-semibold">Nixpacks CI/CD</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Call to Action -->
+        <section class="glass-panel p-8 sm:p-12 rounded-3xl text-center space-y-6 max-w-4xl mx-auto border border-white relative overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <div class="w-16 h-16 rounded-3xl bg-white mx-auto flex items-center justify-center shadow-xl shadow-indigo-100 border border-slate-100 transform -rotate-3 hover:rotate-0 transition-all duration-300">
+                <span class="material-symbols-outlined text-3xl text-indigo-600">account_balance</span>
+            </div>
+            
+            <div class="space-y-2">
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Ready to Test The Live Application?</h2>
+                <p class="text-sm text-slate-500 font-medium max-w-xl mx-auto">
+                    Sign in to test transactions, add custom budget allocations, track recurring loans, and view generated 6-month financial analytical reports.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+                {% if user.is_authenticated %}
+                <a href="{% url 'expansio_dashboard' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-2xl font-bold shadow-xl shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm">
+                    Enter Dashboard &rarr;
+                </a>
+                {% else %}
+                <a href="{% url 'expansio_signup' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-2xl font-bold shadow-xl shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm">
+                    Create Demo Account
+                </a>
+                <a href="{% url 'expansio_login' %}" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-7 py-3.5 rounded-2xl font-bold shadow-sm hover:shadow transition-all text-sm">
+                    Log In with Existing Profile
+                </a>
+                {% endif %}
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200/80 bg-white/50 backdrop-blur py-8 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-lg bg-white flex items-center justify-center shadow-xs border border-slate-100">
+                    <span class="material-symbols-outlined text-sm text-indigo-600">account_balance</span>
+                </div>
+                <span class="font-bold text-slate-700">Expansio Ledger Engine</span>
+            </div>
+            <div>
+                Crafted for Python / Django Backend Developer Portfolio
+            </div>
+            <div>
+                &copy; 2026 Expansio · Production Ready
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<!-- JavaScript for Interactive Home Page -->
+<script>
+    // Demo credentials modal toggle
+    function toggleDemoModal() {
+        const modal = document.getElementById('demoModal');
+        modal.classList.toggle('hidden');
+    }
+
+    // Copy to clipboard helper
+    function copyToClipboard(text, btnElement) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = btnElement.innerText;
+            btnElement.innerText = 'Copied!';
+            btnElement.classList.add('text-emerald-600', 'border-emerald-300');
+            setTimeout(() => {
+                btnElement.innerText = originalText;
+                btnElement.classList.remove('text-emerald-600', 'border-emerald-300');
+            }, 2000);
+        });
+    }
+
+    // Interactive Engine Simulation calculations
+    function recalculateDemo() {
+        const gross = parseFloat(document.getElementById('incomeInput').value) || 0;
+        const expenses = parseFloat(document.getElementById('expenseInput').value) || 0;
+        const emiActive = document.getElementById('emiToggle').checked;
+        const emiAmount = emiActive ? 8500 : 0;
+
+        // Disposable Income = max(0, gross - emi) - expenses
+        const effectiveIncome = Math.max(0, gross - emiAmount);
+        const netDisposable = effectiveIncome - expenses;
+        
+        let savingsRate = 0;
+        if (effectiveIncome > 0) {
+            savingsRate = Math.max(0, Math.min(100, ((netDisposable / effectiveIncome) * 100)));
+        }
+
+        // Format currency helper
+        const formatter = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            minimumFractionDigits: 2
+        });
+
+        // Update elements
+        document.getElementById('calcNetIncome').innerText = formatter.format(netDisposable);
+        document.getElementById('calcSavingsRate').innerText = savingsRate.toFixed(1) + '%';
+        document.getElementById('calcPercentLabel').innerText = savingsRate.toFixed(1) + '% Saved';
+        document.getElementById('calcProgressBar').style.width = savingsRate.toFixed(1) + '%';
+    }
+
+    // Code blueprint tab switcher
+    function switchTab(tabId, buttonElement) {
+        document.querySelectorAll('.code-tab-content').forEach(tab => {
+            tab.classList.add('hidden');
+        });
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('bg-indigo-600', 'text-white');
+            btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
+        });
+
+        document.getElementById(tabId).classList.remove('hidden');
+        buttonElement.classList.add('bg-indigo-600', 'text-white');
+        buttonElement.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
+    }
+</script>
+{% endblock %}

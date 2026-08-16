@@ -95,6 +95,7 @@ class ExpansioWorkflowTests(TestCase):
 
     def test_authenticated_pages_render(self):
         for url_name in (
+            'expansio_home',
             'expansio_dashboard',
             'expansio_transactions',
             'expansio_categories',
@@ -106,6 +107,13 @@ class ExpansioWorkflowTests(TestCase):
             with self.subTest(url_name=url_name):
                 response = self.client.get(reverse(url_name))
                 self.assertEqual(response.status_code, 200)
+
+    def test_home_page_is_public(self):
+        self.client.logout()
+        response = self.client.get(reverse('expansio_home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Expansio')
+        self.assertContains(response, 'Double-Entry Architecture')
 
     def test_healthcheck_is_public(self):
         self.client.logout()

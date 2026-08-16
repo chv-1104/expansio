@@ -105,15 +105,15 @@
 </head>
 
 <body
-    class="bg-slate-100/80 text-slate-700 min-h-screen flex overflow-hidden {% if not user.is_authenticated %}gradient-bg justify-center items-center{% endif %}">
+    class="bg-slate-100/80 text-slate-700 min-h-screen flex overflow-x-hidden {% if not user.is_authenticated or request.resolver_match.url_name == 'expansio_home' %}gradient-bg{% endif %} {% if not user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}justify-center items-center overflow-hidden{% endif %}">
 
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}
     {% include 'components/sidebar.html' %}
     {% endif %}
 
     <main
-        class="flex-1 h-screen overflow-y-auto no-scrollbar relative w-full {% if not user.is_authenticated %}flex items-center justify-center p-4 max-w-7xl mx-auto min-h-screen h-auto overflow-y-visible{% endif %}">
-        {% if user.is_authenticated %}
+        class="flex-1 min-h-screen overflow-y-auto no-scrollbar relative w-full {% if not user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}flex items-center justify-center p-4 max-w-7xl mx-auto h-auto overflow-y-visible{% endif %}">
+        {% if user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}
         {% include 'components/navbar.html' %}
         {% endif %}
 

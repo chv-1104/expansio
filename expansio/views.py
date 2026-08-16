@@ -44,6 +44,11 @@ def health_view(request):
     return JsonResponse({'status': 'ok'})
 
 
+def home_view(request):
+    """Public home/landing page showcasing Expansio architecture and features."""
+    return render(request, 'home.html')
+
+
 def clear_signup_session(request):
     for key in ('signup_data', 'signup_otp_hash', 'signup_otp_expires_at', 'signup_otp_attempts'):
         request.session.pop(key, None)

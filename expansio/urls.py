@@ -3,12 +3,12 @@ from . import views
 
 urlpatterns = [
     path('health/', views.health_view, name='expansio_health'),
+    path('', views.home_view, name='expansio_home'),
+    path('dashboard/', views.dashboard_view, name='expansio_dashboard'),
     path('signup/', views.signup_view, name='expansio_signup'),
     path('verify-otp/', views.verify_otp_view, name='expansio_verify_otp'),
     path('login/', views.login_view, name='expansio_login'),
     path('logout/', views.logout_view, name='expansio_logout'),
-
-    path('', views.dashboard_view, name='expansio_dashboard'),
     path('transactions/', views.transaction_list_view, name='expansio_transactions'),
     path('categories/', views.category_list_view, name='expansio_categories'),
     path('budgets/', views.budget_list_view, name='expansio_budgets'),
