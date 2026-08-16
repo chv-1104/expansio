@@ -60,7 +60,7 @@
                 <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-sm group-hover:bg-emerald-100 transition-colors">
                     <span class="material-symbols-outlined">trending_up</span>
                 </div>
-                <a href="?month={{ month }}&year={{ year }}&show_emi={% if show_emi %}false{% else %}true{% endif %}" 
+                <a href="?month={{ current_month }}&year={{ current_year }}&show_emi={% if show_emi %}false{% else %}true{% endif %}"
                    class="p-1.5 px-3 rounded-xl {% if show_emi %}bg-emerald-50 text-emerald-600 border-emerald-100{% else %}bg-slate-50 text-slate-400 border-slate-100{% endif %} text-[9px] font-bold uppercase tracking-widest hover:shadow-sm transition-all active:scale-90 border flex items-center gap-1.5"
                    title="Toggle EMI Deduction">
                     <span class="w-1.5 h-1.5 rounded-full {% if show_emi %}bg-emerald-500 animate-pulse{% else %}bg-slate-300{% endif %}"></span>
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-5 font-medium text-slate-500 hidden md:table-cell">{{ txn.date|date:"MMM d, Y" }}</td>
+                        <td class="px-6 py-5 font-medium text-slate-500 hidden md:table-cell">{{ txn.date|date:"M d, Y" }}</td>
                         <td class="px-6 py-5 text-center hidden md:table-cell">
                             {% if txn.type == 'Income' %}
                             <span class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-lg text-[0.65rem] font-bold uppercase tracking-wider border border-emerald-100/50">Income</span>

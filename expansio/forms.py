@@ -1,5 +1,9 @@
 from django import forms
-from .models import Category, Budget, Transaction
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+
+from .models import Category, Budget, EMI, Transaction
 
 INPUT_CLASS = 'w-full bg-slate-50 border border-slate-200 shadow-sm rounded-xl py-3 px-4 text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all outline-none duration-200'
 
@@ -12,13 +16,28 @@ class CategoryForm(forms.ModelForm):
             'type': forms.Select(attrs={'class': INPUT_CLASS}),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_name(self):
+        name = self.cleaned_data['name'].strip()
+        category_type = self.cleaned_data.get('type')
+        if self.user and category_type and Category.objects.filter(
+            user=self.user,
+            name__iexact=name,
+            type=category_type,
+        ).exists():
+            raise ValidationError('You already have a category with this name and type.')
+        return name
+
 class BudgetForm(forms.ModelForm):
     class Meta:
         model = Budget
         fields = ['category', 'amount_limit']
         widgets = {
             'category': forms.Select(attrs={'class': INPUT_CLASS}),
-            'amount_limit': forms.NumberInput(attrs={'class': INPUT_CLASS, 'step': '0.01', 'placeholder': 'Limit Amount (e.g., 500.00)'}),
+            'amount_limit': forms.NumberInput(attrs={'class': INPUT_CLASS, 'step': '0.01', 'min': '0.01', 'placeholder': 'Limit Amount (e.g., 500.00)'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -36,7 +55,7 @@ class TransactionForm(forms.ModelForm):
         widgets = {
             'category': forms.Select(attrs={'class': INPUT_CLASS}),
             'description': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'What was this for?'}),
-            'amount': forms.NumberInput(attrs={'class': INPUT_CLASS, 'step': '0.01', 'placeholder': 'Amount (e.g., 50.00)'}),
+            'amount': forms.NumberInput(attrs={'class': INPUT_CLASS, 'step': '0.01', 'min': '0.01', 'placeholder': 'Amount (e.g., 50.00)'}),
             'type': forms.Select(attrs={'class': INPUT_CLASS}),
             'date': forms.DateInput(attrs={'type': 'date', 'class': INPUT_CLASS}),
         }
@@ -47,15 +66,55 @@ class TransactionForm(forms.ModelForm):
         if user:
             self.fields['category'].queryset = Category.objects.filter(user=user)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        category = cleaned_data.get('category')
+        transaction_type = cleaned_data.get('type')
+        if category and transaction_type and category.type != transaction_type:
+            self.add_error('category', 'Choose a category with the same transaction type.')
+        return cleaned_data
+
+
+class EMIForm(forms.ModelForm):
+    class Meta:
+        model = EMI
+        fields = ['description', 'amount', 'frequency', 'start_date', 'end_date']
+        widgets = {
+            'description': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'e.g., Laptop installment'}),
+            'amount': forms.NumberInput(attrs={'class': INPUT_CLASS, 'step': '0.01', 'min': '0.01', 'placeholder': 'Amount'}),
+            'frequency': forms.Select(attrs={'class': INPUT_CLASS}),
+            'start_date': forms.DateInput(attrs={'class': INPUT_CLASS, 'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'class': INPUT_CLASS, 'type': 'date'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+        if start_date and end_date and end_date < start_date:
+            self.add_error('end_date', 'End date cannot be before the start date.')
+        return cleaned_data
+
 class SignupForm(forms.Form):
     first_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'John'}))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': INPUT_CLASS, 'placeholder': 'john@example.com'}))
-    age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': INPUT_CLASS, 'placeholder': '25'}))
+    email = forms.EmailField(max_length=150, widget=forms.EmailInput(attrs={'class': INPUT_CLASS, 'placeholder': 'john@example.com'}))
+    age = forms.IntegerField(min_value=13, max_value=120, widget=forms.NumberInput(attrs={'class': INPUT_CLASS, 'min': '13', 'max': '120', 'placeholder': '25'}))
     city = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'New York'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': INPUT_CLASS, 'placeholder': '••••••••'}))
 
+    def clean_email(self):
+        email = self.cleaned_data['email'].lower()
+        if User.objects.filter(username=email).exists() or User.objects.filter(email__iexact=email).exists():
+            raise ValidationError('An account with this email already exists.')
+        return email
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        validate_password(password)
+        return password
+
 class OTPForm(forms.Form):
-    otp = forms.CharField(max_length=6, widget=forms.TextInput(attrs={'class': 'w-full bg-slate-50 border border-slate-200 shadow-sm rounded-xl py-4 px-4 text-center tracking-[0.5em] text-2xl font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all outline-none duration-200', 'placeholder': '------'}))
+    otp = forms.RegexField(r'^\d{6}$', widget=forms.TextInput(attrs={'class': 'w-full bg-slate-50 border border-slate-200 shadow-sm rounded-xl py-4 px-4 text-center tracking-[0.5em] text-2xl font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all outline-none duration-200', 'placeholder': '------'}))
 
 class LoginForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': INPUT_CLASS, 'placeholder': 'name@example.com'}))
@@ -63,6 +122,6 @@ class LoginForm(forms.Form):
 
 class UserProfileUpdateForm(forms.Form):
     first_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Your name'}))
-    age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Your age'}))
+    age = forms.IntegerField(min_value=13, max_value=120, widget=forms.NumberInput(attrs={'class': INPUT_CLASS, 'min': '13', 'max': '120', 'placeholder': 'Your age'}))
     city = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Your city'}))
     occupation = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'e.g., Software Engineer'}))

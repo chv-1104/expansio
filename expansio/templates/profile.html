@@ -157,10 +157,13 @@
                     <p class="text-xs text-slate-400 font-medium">End your current session on this device</p>
                 </div>
             </div>
-            <a href="{% url 'expansio_logout' %}" class="w-full sm:w-auto bg-rose-50 border border-rose-100 text-rose-600 px-8 py-3.5 rounded-2xl font-bold text-center hover:bg-rose-100 hover:border-rose-200 transition-all text-sm tracking-wide flex items-center justify-center gap-2 group">
-                <span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">logout</span>
-                Log Out
-            </a>
+            <form method="post" action="{% url 'expansio_logout' %}" class="w-full sm:w-auto">
+                {% csrf_token %}
+                <button type="submit" class="w-full bg-rose-50 border border-rose-100 text-rose-600 px-8 py-3.5 rounded-2xl font-bold text-center hover:bg-rose-100 hover:border-rose-200 transition-all text-sm tracking-wide flex items-center justify-center gap-2 group">
+                    <span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">logout</span>
+                    Log Out
+                </button>
+            </form>
         </div>
     </div>
 

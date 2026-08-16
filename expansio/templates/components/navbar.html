@@ -17,9 +17,12 @@
         </form>
     </div>
     <div class="flex items-center gap-4">
-        <a href="{% url 'expansio_logout' %}" class="flex items-center gap-2 p-2.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-95 font-bold text-sm bg-white border border-slate-200/60 shadow-sm md:hidden">
-            <span class="material-symbols-outlined text-[20px]">logout</span>
-        </a>
+        <form method="post" action="{% url 'expansio_logout' %}" class="md:hidden">
+            {% csrf_token %}
+            <button type="submit" class="flex items-center gap-2 p-2.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-95 font-bold text-sm bg-white border border-slate-200/60 shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">logout</span>
+            </button>
+        </form>
         <div class="w-px h-8 bg-slate-200 mx-2 hidden sm:block"></div>
         <a href="{% url 'expansio_profile' %}" class="flex items-center gap-3 hover:bg-slate-100 p-1.5 pr-4 rounded-full transition-all border border-transparent hover:border-slate-200 cursor-pointer group">
             <img alt="User profile avatar" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-md group-hover:shadow-lg transition-all" src="https://ui-avatars.com/api/?name={{ user.first_name|default:user.username }}&background=6366f1&color=fff"/>

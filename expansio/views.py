@@ -1,7 +1,12 @@
-import random
 import calendar
-from datetime import datetime, date, timedelta
+import logging
+import secrets
+from datetime import date, timedelta
+from decimal import Decimal
+
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.hashers import check_password, make_password
+from django.db import IntegrityError, transaction as db_transaction
 from django.db.models import Sum, Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -12,9 +17,50 @@ from django.contrib import messages
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.views.decorators.http import require_POST
 
 from .models import Category, Budget, Transaction, UserProfile, EMI
-from .forms import CategoryForm, BudgetForm, TransactionForm, SignupForm, OTPForm, LoginForm, UserProfileUpdateForm
+from .forms import (
+    BudgetForm,
+    CategoryForm,
+    EMIForm,
+    LoginForm,
+    OTPForm,
+    SignupForm,
+    TransactionForm,
+    UserProfileUpdateForm,
+)
+
+
+logger = logging.getLogger(__name__)
+ZERO = Decimal('0')
+OTP_EXPIRY_MINUTES = 10
+OTP_MAX_ATTEMPTS = 5
+
+
+def clear_signup_session(request):
+    for key in ('signup_data', 'signup_otp_hash', 'signup_otp_expires_at', 'signup_otp_attempts'):
+        request.session.pop(key, None)
+
+
+def get_requested_period(request, default_date=None):
+    """Return a validated (month, year) tuple, or None for malformed input."""
+    default_date = default_date or timezone.localdate()
+    month_raw = request.GET.get('month')
+    year_raw = request.GET.get('year')
+
+    if not month_raw and not year_raw:
+        return default_date.month, default_date.year
+
+    try:
+        month = int(month_raw)
+        year = int(year_raw)
+    except (TypeError, ValueError):
+        return None
+
+    if not 1 <= month <= 12 or not 2000 <= year <= 2100:
+        return None
+    return month, year
 
 @login_required(login_url='expansio_login')
 def profile_view(request):
@@ -46,17 +92,24 @@ def profile_view(request):
     })
 
 def signup_view(request):
+    if request.user.is_authenticated:
+        return redirect('expansio_dashboard')
+
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
-            # Generate 6-digit OTP
-            otp = str(random.randint(100000, 999999))
-            
-            # Store signup data in session
-            request.session['signup_data'] = form.cleaned_data
-            request.session['otp'] = otp
-            
-            # Send Email
+            otp = f'{secrets.randbelow(1_000_000):06d}'
+            request.session['signup_data'] = {
+                'first_name': form.cleaned_data['first_name'].strip(),
+                'email': form.cleaned_data['email'],
+                'age': form.cleaned_data['age'],
+                'city': form.cleaned_data['city'].strip(),
+                'password_hash': make_password(form.cleaned_data['password']),
+            }
+            request.session['signup_otp_hash'] = make_password(otp)
+            request.session['signup_otp_expires_at'] = (timezone.now() + timedelta(minutes=OTP_EXPIRY_MINUTES)).timestamp()
+            request.session['signup_otp_attempts'] = 0
+
             try:
                 html_message = render_to_string('emails/otp_email.html', {
                     'otp': otp,
@@ -67,57 +120,65 @@ def signup_view(request):
                 send_mail(
                     'Your Expansio OTP Verification Code',
                     plain_message,
-                    settings.EMAIL_HOST_USER,
+                    settings.DEFAULT_FROM_EMAIL,
                     [form.cleaned_data['email']],
                     html_message=html_message,
                     fail_silently=False,
                 )
                 return redirect('expansio_verify_otp')
-            except Exception as e:
-                messages.error(request, f"Failed to send email. Please check your SMTP settings. Error: {str(e)}")
+            except Exception:
+                logger.exception('Failed to send signup OTP email.')
+                clear_signup_session(request)
+                messages.error(request, 'We could not send the verification email. Please try again shortly.')
     else:
         form = SignupForm()
     return render(request, 'signup.html', {'form': form})
 
 def verify_otp_view(request):
-    if 'signup_data' not in request.session or 'otp' not in request.session:
+    signup_data = request.session.get('signup_data')
+    otp_hash = request.session.get('signup_otp_hash')
+    expires_at = request.session.get('signup_otp_expires_at')
+    if not signup_data or not otp_hash or not expires_at:
         return redirect('expansio_signup')
 
     if request.method == 'POST':
         form = OTPForm(request.POST)
         if form.is_valid():
-            if form.cleaned_data['otp'] == request.session['otp']:
-                data = request.session['signup_data']
-                
-                # Check if user already exists
-                if User.objects.filter(username=data['email']).exists() or User.objects.filter(email=data['email']).exists():
-                    messages.error(request, "A user with this email already exists.")
+            if timezone.now().timestamp() > float(expires_at):
+                clear_signup_session(request)
+                messages.error(request, 'This verification code has expired. Please sign up again.')
+                return redirect('expansio_signup')
+
+            if not check_password(form.cleaned_data['otp'], otp_hash):
+                attempts = request.session.get('signup_otp_attempts', 0) + 1
+                request.session['signup_otp_attempts'] = attempts
+                if attempts >= OTP_MAX_ATTEMPTS:
+                    clear_signup_session(request)
+                    messages.error(request, 'Too many incorrect attempts. Please sign up again.')
                     return redirect('expansio_signup')
-                
-                # Create user
-                user = User.objects.create_user(
-                    username=data['email'],
-                    email=data['email'],
-                    password=data['password'],
-                    first_name=data['first_name']
-                )
-                
-                # Create UserProfile
-                UserProfile.objects.create(
-                    user=user,
-                    age=data['age'],
-                    city=data['city']
-                )
-                
-                # Clear session data
-                del request.session['signup_data']
-                del request.session['otp']
-                
-                # Auto-login the user after successful registration
-                login(request, user)
-                return redirect('expansio_dashboard')
-            else:
-                messages.error(request, "Invalid OTP. Please try again.")
+                messages.error(request, 'Invalid verification code. Please try again.')
+                return render(request, 'verify_otp.html', {'form': form})
+
+            try:
+                with db_transaction.atomic():
+                    user = User.objects.create(
+                        username=signup_data['email'],
+                        email=signup_data['email'],
+                        password=signup_data['password_hash'],
+                        first_name=signup_data['first_name'],
+                    )
+                    UserProfile.objects.update_or_create(
+                        user=user,
+                        defaults={'age': signup_data['age'], 'city': signup_data['city']},
+                    )
+            except IntegrityError:
+                clear_signup_session(request)
+                messages.error(request, 'An account with this email already exists.')
+                return redirect('expansio_signup')
+
+            clear_signup_session(request)
+            login(request, user)
+            return redirect('expansio_dashboard')
     else:
         form = OTPForm()
     return render(request, 'verify_otp.html', {'form': form})
@@ -139,6 +200,7 @@ def login_view(request):
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
 
+@require_POST
 def logout_view(request):
     logout(request)
     return redirect('expansio_login')
@@ -146,7 +208,7 @@ def logout_view(request):
 def get_emi_deductions(user, year, month):
     """Calculate total EMI burden for a specific month/year"""
     emis = EMI.objects.filter(user=user, active=True, start_date__lte=date(year, month, calendar.monthrange(year, month)[1]))
-    total_deduction = 0
+    total_deduction = ZERO
     
     for emi in emis:
         # Skip if end_date exists and is in the past
@@ -172,10 +234,10 @@ def get_emi_deductions(user, year, month):
 def get_all_time_emi_burden(user, target_date=None):
     """Calculate total accumulated EMI burden up to a specific date (defaults to today)"""
     if target_date is None:
-        target_date = date.today()
-    
-    emis = EMI.objects.filter(user=user, start_date__lte=target_date)
-    total_accumulated = 0
+        target_date = timezone.localdate()
+
+    emis = EMI.objects.filter(user=user, active=True, start_date__lte=target_date)
+    total_accumulated = ZERO
     
     for emi in emis:
         # The EMI stops accumulating at either its end_date or the target_date
@@ -199,13 +261,12 @@ def get_all_time_emi_burden(user, target_date=None):
 
 @login_required(login_url='expansio_login')
 def dashboard_view(request):
-    # Get period from request or default to current month
-    now = timezone.now()
-    month_raw = request.GET.get('month')
-    year_raw = request.GET.get('year')
-    
-    month = int(month_raw) if month_raw and month_raw.isdigit() else now.month
-    year = int(year_raw) if year_raw and year_raw.isdigit() else now.year
+    now = timezone.localdate()
+    period = get_requested_period(request, now)
+    if period is None:
+        messages.error(request, 'Choose a valid month and year.')
+        return redirect('expansio_dashboard')
+    month, year = period
     
     # Calculate previous and next month for navigation
     prev_month = month - 1 if month > 1 else 12
@@ -214,7 +275,7 @@ def dashboard_view(request):
     next_year = year if month < 12 else year + 1
     
     # Selected Month Statistics
-    transactions = Transaction.objects.filter(user=request.user, date__month=month, date__year=year).order_by('-date')
+    transactions = Transaction.objects.filter(user=request.user, date__month=month, date__year=year).select_related('category').order_by('-date')
     recent_transactions = transactions[:5]
     
     # EMI Deductions
@@ -224,18 +285,19 @@ def dashboard_view(request):
     show_emi = request.GET.get('show_emi', 'true') == 'true'
     
     # Adjust Income (Net Income)
-    selected_income = (Transaction.objects.filter(user=request.user, type='Income', date__month=month, date__year=year).aggregate(Sum('amount'))['amount__sum'] or 0)
+    selected_income = (Transaction.objects.filter(user=request.user, type='Income', date__month=month, date__year=year).aggregate(Sum('amount'))['amount__sum'] or ZERO)
     if show_emi:
-        selected_income -= emi_total
+        selected_income = max(ZERO, selected_income - emi_total)
     
-    selected_expenses = Transaction.objects.filter(user=request.user, type='Expense', date__month=month, date__year=year).aggregate(Sum('amount'))['amount__sum'] or 0
+    selected_expenses = Transaction.objects.filter(user=request.user, type='Expense', date__month=month, date__year=year).aggregate(Sum('amount'))['amount__sum'] or ZERO
+    
     
     # All-time Net Worth (Cumulative)
-    all_income = Transaction.objects.filter(user=request.user, type='Income').aggregate(Sum('amount'))['amount__sum'] or 0
-    all_expenses = Transaction.objects.filter(user=request.user, type='Expense').aggregate(Sum('amount'))['amount__sum'] or 0
+    all_income = Transaction.objects.filter(user=request.user, type='Income').aggregate(Sum('amount'))['amount__sum'] or ZERO
+    all_expenses = Transaction.objects.filter(user=request.user, type='Expense').aggregate(Sum('amount'))['amount__sum'] or ZERO
     total_balance = all_income - all_expenses
     
-    emi_all_time = 0
+    emi_all_time = ZERO
     if show_emi:
         # Deduct all-time EMI burden from net worth
         emi_all_time = get_all_time_emi_burden(request.user)
@@ -272,27 +334,35 @@ def dashboard_view(request):
 
 @login_required(login_url='expansio_login')
 def transaction_list_view(request):
-    now = timezone.now()
-    month = request.GET.get('month')
-    year = request.GET.get('year')
-    
-    # Filter by search query if provided
-    query = request.GET.get('q')
+    transactions = Transaction.objects.filter(user=request.user).select_related('category')
+    period_name = 'All Time'
+    query = request.GET.get('q', '').strip()
+    category_id = request.GET.get('category')
+    has_period_filter = request.GET.get('month') is not None or request.GET.get('year') is not None
+
     if query:
-        transactions = Transaction.objects.filter(
-            user=request.user
-        ).filter(
-            Q(description__icontains=query) | 
-            Q(category__name__icontains=query)
-        ).order_by('-date')
+        transactions = transactions.filter(Q(description__icontains=query) | Q(category__name__icontains=query))
         period_name = f"Search results for '{query}'"
-    # Filter by month/year if provided
-    elif month and year:
-        transactions = Transaction.objects.filter(user=request.user, date__month=month, date__year=year).order_by('-date')
-        period_name = f"{calendar.month_name[int(month)]} {year}"
-    else:
-        transactions = Transaction.objects.filter(user=request.user).order_by('-date')
-        period_name = "All Time"
+
+    if category_id:
+        try:
+            category = get_object_or_404(Category, pk=int(category_id), user=request.user)
+        except (TypeError, ValueError):
+            messages.error(request, 'Choose a valid category.')
+            return redirect('expansio_transactions')
+        transactions = transactions.filter(category=category)
+        period_name = category.name if not query else f"{period_name} in {category.name}"
+
+    if has_period_filter:
+        period = get_requested_period(request)
+        if period is None:
+            messages.error(request, 'Choose a valid month and year.')
+            return redirect('expansio_transactions')
+        month, year = period
+        transactions = transactions.filter(date__month=month, date__year=year)
+        period_name = f"{period_name} - {calendar.month_name[month]} {year}" if query or category_id else f"{calendar.month_name[month]} {year}"
+
+    transactions = transactions.order_by('-date')
 
     if request.method == 'POST':
         form = TransactionForm(request.POST, user=request.user)
@@ -304,6 +374,8 @@ def transaction_list_view(request):
     else:
         # Pre-fill type if provided in GET
         initial_type = request.GET.get('type', 'Expense')
+        if initial_type not in dict(Transaction.TYPE_CHOICES):
+            initial_type = 'Expense'
         form = TransactionForm(initial={'type': initial_type}, user=request.user)
     return render(request, 'transactions.html', {
         'transactions': transactions, 
@@ -315,14 +387,14 @@ def transaction_list_view(request):
 def category_list_view(request):
     categories = Category.objects.filter(user=request.user)
     if request.method == 'POST':
-        form = CategoryForm(request.POST)
+        form = CategoryForm(request.POST, user=request.user)
         if form.is_valid():
             category = form.save(commit=False)
             category.user = request.user
             category.save()
             return redirect('expansio_categories')
     else:
-        form = CategoryForm()
+        form = CategoryForm(user=request.user)
     
     context = {
         'categories': categories,
@@ -334,11 +406,12 @@ def category_list_view(request):
 def budget_list_view(request):
     budgets = Budget.objects.filter(category__user=request.user, category__type='Expense')
     budget_data = []
-    current_month = timezone.now().month
-    current_year = timezone.now().year
+    today = timezone.localdate()
+    current_month = today.month
+    current_year = today.year
     
-    total_budget_expense = 0
-    total_spent_expense = 0
+    total_budget_expense = ZERO
+    total_spent_expense = ZERO
     
     for budget in budgets:
         spent = Transaction.objects.filter(
@@ -347,7 +420,7 @@ def budget_list_view(request):
             type=budget.category.type,
             date__month=current_month,
             date__year=current_year
-        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        ).aggregate(Sum('amount'))['amount__sum'] or ZERO
         
         # Only include expenses in the header summary totals
         if budget.category.type == 'Expense':
@@ -385,11 +458,12 @@ def budget_list_view(request):
 
 @login_required(login_url='expansio_login')
 def reports_view(request):
-    now = timezone.now()
-    month_raw = request.GET.get('month')
-    year_raw = request.GET.get('year')
-    current_month = int(month_raw) if month_raw and month_raw.isdigit() else now.month
-    current_year = int(year_raw) if year_raw and year_raw.isdigit() else now.year
+    now = timezone.localdate()
+    period = get_requested_period(request, now)
+    if period is None:
+        messages.error(request, 'Choose a valid month and year.')
+        return redirect('expansio_reports')
+    current_month, current_year = period
 
     # 1. Monthly Summary (For Selected Period)
     total_income = Transaction.objects.filter(
@@ -397,18 +471,18 @@ def reports_view(request):
         type='Income', 
         date__month=current_month, 
         date__year=current_year
-    ).aggregate(Sum('amount'))['amount__sum'] or 0
+    ).aggregate(Sum('amount'))['amount__sum'] or ZERO
     
     # EMI Deductions for the report period
     emi_total = get_emi_deductions(request.user, current_year, current_month)
-    total_income -= emi_total
+    total_income = max(ZERO, total_income - emi_total)
     
     total_expenses = Transaction.objects.filter(
         user=request.user,
         type='Expense', 
         date__month=current_month, 
         date__year=current_year
-    ).aggregate(Sum('amount'))['amount__sum'] or 0
+    ).aggregate(Sum('amount'))['amount__sum'] or ZERO
 
     savings = total_income - total_expenses
     savings_rate = (savings / total_income * 100) if total_income > 0 else 0
@@ -443,11 +517,11 @@ def reports_view(request):
             target_month += 12
             target_year -= 1
         
-        m_inc = Transaction.objects.filter(user=request.user, type='Income', date__month=target_month, date__year=target_year).aggregate(Sum('amount'))['amount__sum'] or 0
+        m_inc = Transaction.objects.filter(user=request.user, type='Income', date__month=target_month, date__year=target_year).aggregate(Sum('amount'))['amount__sum'] or ZERO
         m_emi = get_emi_deductions(request.user, target_year, target_month)
         m_inc = max(0, m_inc - m_emi) # Net Income
         
-        m_exp = Transaction.objects.filter(user=request.user, type='Expense', date__month=target_month, date__year=target_year).aggregate(Sum('amount'))['amount__sum'] or 0
+        m_exp = Transaction.objects.filter(user=request.user, type='Expense', date__month=target_month, date__year=target_year).aggregate(Sum('amount'))['amount__sum'] or ZERO
         
         max_val = max(max_val, m_inc, m_exp)
         trends_raw.append({
@@ -495,62 +569,58 @@ def reports_view(request):
     return render(request, 'reports.html', context)
 
 @login_required(login_url='expansio_login')
+@require_POST
 def delete_transaction_view(request, pk):
     transaction = get_object_or_404(Transaction, pk=pk, user=request.user)
-    if request.method == 'POST':
-        transaction.delete()
-        messages.success(request, "Transaction deleted successfully.")
+    transaction.delete()
+    messages.success(request, "Transaction deleted successfully.")
     return redirect('expansio_transactions')
 
 @login_required(login_url='expansio_login')
+@require_POST
 def delete_category_view(request, pk):
     category = get_object_or_404(Category, pk=pk, user=request.user)
-    if request.method == 'POST':
-        category.delete()
-        messages.success(request, "Category deleted successfully.")
+    category.delete()
+    messages.success(request, "Category deleted successfully.")
     return redirect('expansio_categories')
 
 @login_required(login_url='expansio_login')
+@require_POST
 def delete_budget_view(request, pk):
     budget = get_object_or_404(Budget, pk=pk, category__user=request.user)
-    if request.method == 'POST':
-        category_name = budget.category.name
-        budget.delete()
-        messages.success(request, f"Budget for {category_name} removed successfully.")
+    category_name = budget.category.name
+    budget.delete()
+    messages.success(request, f"Budget for {category_name} removed successfully.")
     return redirect('expansio_budgets')
 
 @login_required(login_url='expansio_login')
 def emi_list_view(request):
     if request.method == 'POST':
-        description = request.POST.get('description')
-        amount = request.POST.get('amount')
-        frequency = request.POST.get('frequency')
-        start_date = request.POST.get('start_date')
-        
-        EMI.objects.create(
-            user=request.user,
-            description=description,
-            amount=amount,
-            frequency=frequency,
-            start_date=start_date
-        )
-        messages.success(request, f"EMI for '{description}' added successfully.")
-        return redirect('expansio_emi')
+        form = EMIForm(request.POST)
+        if form.is_valid():
+            emi = form.save(commit=False)
+            emi.user = request.user
+            emi.save()
+            messages.success(request, f"EMI for '{emi.description}' added successfully.")
+            return redirect('expansio_emi')
+    else:
+        form = EMIForm(initial={'start_date': timezone.localdate()})
 
     emis = EMI.objects.filter(user=request.user)
-    today = date.today()
+    today = timezone.localdate()
     monthly_burden = get_emi_deductions(request.user, today.year, today.month)
     
     return render(request, 'emi.html', {
         'emis': emis,
+        'form': form,
         'monthly_burden': monthly_burden
     })
 
 @login_required(login_url='expansio_login')
+@require_POST
 def delete_emi_view(request, pk):
     emi = get_object_or_404(EMI, pk=pk, user=request.user)
-    if request.method == 'POST':
-        description = emi.description
-        emi.delete()
-        messages.success(request, f"EMI for '{description}' removed.")
+    description = emi.description
+    emi.delete()
+    messages.success(request, f"EMI for '{description}' removed.")
     return redirect('expansio_emi')

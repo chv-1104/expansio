@@ -1,10 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
+
+
+MONEY_VALIDATORS = [MinValueValidator(0.01)]
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    age = models.IntegerField(null=True, blank=True)
-    city = models.CharField(max_length=100)
+    age = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(13), MaxValueValidator(120)],
+    )
+    city = models.CharField(max_length=100, blank=True, default='')
     occupation = models.CharField(max_length=100, blank=True, default='')
 
     def __str__(self):
@@ -24,9 +33,21 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.name} ({self.type})"
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'name', 'type'],
+                name='unique_category_name_per_user_and_type',
+            )
+        ]
+
 class Budget(models.Model):
     category = models.OneToOneField(Category, on_delete=models.CASCADE)
-    amount_limit = models.DecimalField(max_digits=10, decimal_places=2)
+    amount_limit = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=MONEY_VALIDATORS,
+    )
 
     def __str__(self):
         return f"{self.category.name} - ₹{self.amount_limit}"
@@ -39,7 +60,11 @@ class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     description = models.CharField(max_length=255)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=MONEY_VALIDATORS,
+    )
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     date = models.DateField()
 
@@ -53,7 +78,11 @@ class EMI(models.Model):
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=255)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=MONEY_VALIDATORS,
+    )
     frequency = models.CharField(max_length=10, choices=FREQUENCY_CHOICES, default='Monthly')
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
