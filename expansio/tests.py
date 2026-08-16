@@ -286,15 +286,14 @@ class RailwayDeploymentTests(TestCase):
                 'db_user'
             )
 
-    def test_production_rejects_sqlite(self):
+    def test_build_time_defaults_allow_collectstatic_without_secrets(self):
         import importlib
         import os
         from unittest.mock import patch
-        from django.core.exceptions import ImproperlyConfigured
         import project.settings as settings_module
 
         env_vars = {
-            'SECRET_KEY': 'django-insecure-test-key-for-railway-deployment-tests',
+            'SECRET_KEY': '',
             'DEBUG': 'False',
             'DATABASE_URL': '',
             'MYSQL_URL': '',
@@ -302,6 +301,11 @@ class RailwayDeploymentTests(TestCase):
             'MYSQL_DATABASE': '',
         }
         with patch.dict(os.environ, env_vars):
-            with self.assertRaises(ImproperlyConfigured):
-                importlib.reload(settings_module)
+            importlib.reload(settings_module)
+            self.assertTrue(settings_module.SECRET_KEY.startswith('django-insecure-'))
+            self.assertEqual(
+                settings_module.DATABASES['default']['ENGINE'],
+                'django.db.backends.sqlite3'
+            )
+
 

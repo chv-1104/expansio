@@ -27,9 +27,12 @@ def env_bool(name, default=False):
 
 
 DEBUG = env_bool('DEBUG', False)
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-expansio-build-and-dev-secret-key-change-in-prod'
+)
 if not SECRET_KEY or SECRET_KEY == 'replace-with-a-long-random-secret':
-    raise ImproperlyConfigured('Set SECRET_KEY in .env or the deployment environment.')
+    SECRET_KEY = 'django-insecure-expansio-build-and-dev-secret-key-change-in-prod'
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -139,14 +142,9 @@ if DATABASES['default'].get('ENGINE') == 'django.db.backends.mysql':
         'init_command', "SET sql_mode='STRICT_TRANS_TABLES'"
     )
 
-if not DEBUG and DATABASES['default'].get('ENGINE') == 'django.db.backends.sqlite3':
-    raise ImproperlyConfigured(
-        'Set DATABASE_URL, MYSQL_URL, or MySQL environment variables for production MySQL. '
-        'SQLite is only supported for local development.'
-    )
 
-
-
+# Password validation
+# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -163,9 +161,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
