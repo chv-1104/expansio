@@ -107,6 +107,14 @@ class ExpansioWorkflowTests(TestCase):
                 response = self.client.get(reverse(url_name))
                 self.assertEqual(response.status_code, 200)
 
+    def test_healthcheck_is_public(self):
+        self.client.logout()
+
+        response = self.client.get(reverse('expansio_health'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content, {'status': 'ok'})
+
     def test_category_filter_limits_transaction_results(self):
         Transaction.objects.create(
             user=self.user,
@@ -213,3 +221,87 @@ class ExpansioWorkflowTests(TestCase):
 
         self.assertEqual(get_response.status_code, 405)
         self.assertRedirects(post_response, reverse('expansio_login'))
+
+
+class RailwayDeploymentTests(TestCase):
+    def tearDown(self):
+        import project.settings as settings_module
+        import importlib
+        importlib.reload(settings_module)
+
+    def test_railway_public_domain_and_mysql_settings(self):
+        import importlib
+        import os
+        from unittest.mock import patch
+        import project.settings as settings_module
+
+        env_vars = {
+            'SECRET_KEY': 'django-insecure-test-key-for-railway-deployment-tests',
+            'DEBUG': 'False',
+            'RAILWAY_PUBLIC_DOMAIN': 'https://expansio.up.railway.app/',
+            'DATABASE_URL': 'mysql://root:password@mysql.railway.internal:3306/railway',
+        }
+        with patch.dict(os.environ, env_vars):
+            importlib.reload(settings_module)
+            self.assertIn('expansio.up.railway.app', settings_module.ALLOWED_HOSTS)
+            self.assertIn('https://expansio.up.railway.app', settings_module.CSRF_TRUSTED_ORIGINS)
+            self.assertEqual(
+                settings_module.DATABASES['default']['ENGINE'],
+                'django.db.backends.mysql'
+            )
+            self.assertEqual(
+                settings_module.DATABASES['default']['NAME'],
+                'railway'
+            )
+
+    def test_railway_mysql_individual_env_variables(self):
+        import importlib
+        import os
+        from unittest.mock import patch
+        import project.settings as settings_module
+
+        env_vars = {
+            'SECRET_KEY': 'django-insecure-test-key-for-railway-deployment-tests',
+            'DEBUG': 'False',
+            'DATABASE_URL': '',
+            'MYSQL_URL': '',
+            'MYSQLDATABASE': 'expansio_prod',
+            'MYSQLUSER': 'db_user',
+            'MYSQLPASSWORD': 'secretpassword',
+            'MYSQLHOST': 'mysql.internal',
+            'MYSQLPORT': '3306',
+        }
+        with patch.dict(os.environ, env_vars):
+            importlib.reload(settings_module)
+            self.assertEqual(
+                settings_module.DATABASES['default']['ENGINE'],
+                'django.db.backends.mysql'
+            )
+            self.assertEqual(
+                settings_module.DATABASES['default']['NAME'],
+                'expansio_prod'
+            )
+            self.assertEqual(
+                settings_module.DATABASES['default']['USER'],
+                'db_user'
+            )
+
+    def test_production_rejects_sqlite(self):
+        import importlib
+        import os
+        from unittest.mock import patch
+        from django.core.exceptions import ImproperlyConfigured
+        import project.settings as settings_module
+
+        env_vars = {
+            'SECRET_KEY': 'django-insecure-test-key-for-railway-deployment-tests',
+            'DEBUG': 'False',
+            'DATABASE_URL': '',
+            'MYSQL_URL': '',
+            'MYSQLDATABASE': '',
+            'MYSQL_DATABASE': '',
+        }
+        with patch.dict(os.environ, env_vars):
+            with self.assertRaises(ImproperlyConfigured):
+                importlib.reload(settings_module)
+

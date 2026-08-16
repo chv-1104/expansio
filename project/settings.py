@@ -33,15 +33,28 @@ if not SECRET_KEY or SECRET_KEY == 'replace-with-a-long-random-secret':
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+    for host in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.railway.app').split(',')
     if host.strip()
 ]
+railway_public_domain = (
+    os.environ.get('RAILWAY_PUBLIC_DOMAIN', '')
+    .strip()
+    .removeprefix('https://')
+    .removeprefix('http://')
+    .rstrip('/')
+)
+if railway_public_domain and railway_public_domain not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(railway_public_domain)
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
     if origin.strip()
 ]
+if railway_public_domain:
+    railway_origin = f'https://{railway_public_domain}'
+    if railway_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(railway_origin)
 
 
 # Application definition
@@ -87,11 +100,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project.wsgi.application'
 
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.environ.get('DATABASE_URL') or os.environ.get('MYSQL_URL')
+
+mysql_db = os.environ.get('MYSQLDATABASE') or os.environ.get('MYSQL_DATABASE')
+mysql_user = os.environ.get('MYSQLUSER') or os.environ.get('MYSQL_USER')
+mysql_password = os.environ.get('MYSQLPASSWORD') or os.environ.get('MYSQL_PASSWORD', '')
+mysql_host = os.environ.get('MYSQLHOST') or os.environ.get('MYSQL_HOST')
+mysql_port = os.environ.get('MYSQLPORT') or os.environ.get('MYSQL_PORT', '3306')
 
 if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    }
+elif mysql_db and (mysql_host or mysql_user):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': mysql_db,
+            'USER': mysql_user or 'root',
+            'PASSWORD': mysql_password,
+            'HOST': mysql_host or '127.0.0.1',
+            'PORT': int(mysql_port) if str(mysql_port).isdigit() else 3306,
+            'CONN_MAX_AGE': 600,
+        }
     }
 else:
     DATABASES = {
@@ -101,11 +132,21 @@ else:
         }
     }
 
+if DATABASES['default'].get('ENGINE') == 'django.db.backends.mysql':
+    DATABASES['default'].setdefault('OPTIONS', {})
+    DATABASES['default']['OPTIONS'].setdefault('charset', 'utf8mb4')
+    DATABASES['default']['OPTIONS'].setdefault(
+        'init_command', "SET sql_mode='STRICT_TRANS_TABLES'"
+    )
+
+if not DEBUG and DATABASES['default'].get('ENGINE') == 'django.db.backends.sqlite3':
+    raise ImproperlyConfigured(
+        'Set DATABASE_URL, MYSQL_URL, or MySQL environment variables for production MySQL. '
+        'SQLite is only supported for local development.'
+    )
 
 
 
-# Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -169,6 +210,8 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000'))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+    # Railway health checks reach the application directly over its private network.
+    SECURE_REDIRECT_EXEMPT = [r'^health/$']
 
 SESSION_COOKIE_HTTPONLY = True
 SECURE_CONTENT_TYPE_NOSNIFF = True

@@ -30,7 +30,7 @@ Expansio is a full-featured personal finance and budgeting web application built
 
 6. **Production & Interview Readiness**
    - Automated unit & integration tests covering auth, financial models, EMI burden, category filters, and edge cases.
-   - Fully configured for local SQLite development and cloud deployments (Railway / Docker / PostgreSQL / MySQL) via `DATABASE_URL` and `dj_database_url`.
+   - Fully configured for local SQLite development and cloud deployments (Railway / Docker / MySQL) via `DATABASE_URL` / `MYSQL_URL` / `MYSQL_*` and `PyMySQL`.
    - Django Admin fully registered with search, list filters, and select-related optimizations.
 
 ---
@@ -38,7 +38,7 @@ Expansio is a full-featured personal finance and budgeting web application built
 ## 🛠️ Tech Stack
 
 - **Backend:** Python 3.10+, Django 4.2+ / 5.x
-- **Database:** SQLite (local development default) / MySQL / PostgreSQL (production via `DATABASE_URL`)
+- **Database:** SQLite (local development default) / MySQL (production via `DATABASE_URL` or `MYSQL_URL`)
 - **Static Assets:** WhiteNoise with Manifest caching
 - **Styling & UI:** Tailwind CSS, Material Symbols, Glassmorphism design tokens
 
@@ -107,3 +107,32 @@ Verify static collection:
 ```powershell
 python manage.py collectstatic --noinput --dry-run
 ```
+
+---
+
+## Railway Deployment
+
+The repository contains `railway.json`, which collects static files during the build, runs migrations before deployment, starts Gunicorn on Railway's assigned port, and checks `/health/` before routing traffic.
+
+1. Push the repository to GitHub and create a Railway service from it.
+2. Add a Railway **MySQL** database service in the same project.
+3. In your web service environment variables on Railway, add:
+   - `DATABASE_URL`: set to `${{MySQL.MYSQL_URL}}` (or `${{MySQL.DATABASE_URL}}` via Railway's reference picker)
+4. Add these web-service variables (do not upload or commit your local `.env` file):
+
+```env
+DEBUG=False
+SECRET_KEY=generate-a-new-long-random-value
+ALLOWED_HOSTS=your-service.up.railway.app
+CSRF_TRUSTED_ORIGINS=https://your-service.up.railway.app
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your-gmail-address@gmail.com
+EMAIL_HOST_PASSWORD=your-gmail-app-password
+DEFAULT_FROM_EMAIL=your-gmail-address@gmail.com
+```
+
+5. Generate a public domain in Railway Networking, replace `your-service.up.railway.app`, and deploy. The `/health/` endpoint will return `{"status": "ok"}`.
+
+Railway's MySQL connection is required in production. The local SQLite database is deliberately blocked when `DEBUG=False`, preventing accidental deployment with ephemeral data.

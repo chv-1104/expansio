@@ -5,6 +5,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.contrib.auth.hashers import check_password, make_password
 from django.db import IntegrityError, transaction as db_transaction
 from django.db.models import Sum, Q
@@ -36,6 +37,11 @@ logger = logging.getLogger(__name__)
 ZERO = Decimal('0')
 OTP_EXPIRY_MINUTES = 10
 OTP_MAX_ATTEMPTS = 5
+
+
+def health_view(request):
+    """Lightweight deployment health check that does not require authentication."""
+    return JsonResponse({'status': 'ok'})
 
 
 def clear_signup_session(request):
