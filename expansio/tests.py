@@ -113,7 +113,7 @@ class ExpansioWorkflowTests(TestCase):
         response = self.client.get(reverse('expansio_home'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Expansio')
-        self.assertContains(response, 'Double-Entry Architecture')
+        self.assertContains(response, 'built with Django')
 
     def test_healthcheck_is_public(self):
         self.client.logout()
