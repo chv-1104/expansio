@@ -195,6 +195,8 @@ def verify_otp_view(request):
     return render(request, 'verify_otp.html', {'form': form})
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('expansio_dashboard')
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -295,10 +297,13 @@ def dashboard_view(request):
     # EMI Toggle State
     show_emi = request.GET.get('show_emi', 'true') == 'true'
     
-    # Adjust Income (Net Income)
-    selected_income = (Transaction.objects.filter(user=request.user, type='Income', date__month=month, date__year=year).aggregate(Sum('amount'))['amount__sum'] or ZERO)
+    # Gross income (before any EMI deduction)
+    gross_income = (Transaction.objects.filter(user=request.user, type='Income', date__month=month, date__year=year).aggregate(Sum('amount'))['amount__sum'] or ZERO)
+    # Disposable income (after EMI)
     if show_emi:
-        selected_income = max(ZERO, selected_income - emi_total)
+        disposable_income = max(ZERO, gross_income - emi_total)
+    else:
+        disposable_income = gross_income
     
     selected_expenses = Transaction.objects.filter(user=request.user, type='Expense', date__month=month, date__year=year).aggregate(Sum('amount'))['amount__sum'] or ZERO
     
@@ -325,7 +330,8 @@ def dashboard_view(request):
     
     context = {
         'recent_transactions': recent_transactions,
-        'selected_income': selected_income,
+        'gross_income': gross_income,
+        'disposable_income': disposable_income,
         'selected_expenses': selected_expenses,
         'emi_burden': emi_total,
         'total_balance': total_balance,
@@ -438,13 +444,15 @@ def budget_list_view(request):
             total_budget_expense += budget.amount_limit
             total_spent_expense += spent
             
-        percentage = min(int((spent / budget.amount_limit) * 100) if budget.amount_limit > 0 else 100, 100)
+        raw_percentage = int((spent / budget.amount_limit) * 100) if budget.amount_limit > 0 else 100
+        bar_percentage = min(raw_percentage, 100)
         budget_data.append({
             'budget': budget,
             'spent': spent,
-            'percentage': percentage,
-            'is_exceeded': percentage >= 100,
-            'is_warning': percentage >= 85 and percentage < 100
+            'percentage': raw_percentage,
+            'bar_percentage': bar_percentage,
+            'is_exceeded': raw_percentage >= 100,
+            'is_warning': raw_percentage >= 85 and raw_percentage < 100
         })
         
     if request.method == 'POST':
@@ -477,7 +485,7 @@ def reports_view(request):
     current_month, current_year = period
 
     # 1. Monthly Summary (For Selected Period)
-    total_income = Transaction.objects.filter(
+    gross_income = Transaction.objects.filter(
         user=request.user,
         type='Income', 
         date__month=current_month, 
@@ -486,7 +494,7 @@ def reports_view(request):
     
     # EMI Deductions for the report period
     emi_total = get_emi_deductions(request.user, current_year, current_month)
-    total_income = max(ZERO, total_income - emi_total)
+    disposable_income = max(ZERO, gross_income - emi_total)
     
     total_expenses = Transaction.objects.filter(
         user=request.user,
@@ -495,8 +503,8 @@ def reports_view(request):
         date__year=current_year
     ).aggregate(Sum('amount'))['amount__sum'] or ZERO
 
-    savings = total_income - total_expenses
-    savings_rate = (savings / total_income * 100) if total_income > 0 else 0
+    savings = disposable_income - total_expenses
+    savings_rate = (savings / disposable_income * 100) if disposable_income > 0 else 0
 
     # 2. Category Breakdown (Expenses)
     category_expenses = Category.objects.filter(user=request.user, type='Expense').annotate(
@@ -560,7 +568,8 @@ def reports_view(request):
     next_year = current_year if current_month < 12 else current_year + 1
 
     context = {
-        'total_income': total_income,
+        'gross_income': gross_income,
+        'disposable_income': disposable_income,
         'total_expenses': total_expenses,
         'savings': savings,
         'savings_rate': round(savings_rate, 1),

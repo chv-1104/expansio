@@ -2,7 +2,7 @@
 {% block title %}Financial Analytics{% endblock %}
 
 {% block content %}
-<div class="px-4 md:px-8 py-10 max-w-7xl mx-auto w-full space-y-10 mb-20 md:mb-0">
+<div class="px-4 md:px-8 py-10 max-w-7xl mx-auto w-full space-y-10">
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
@@ -42,11 +42,14 @@
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Savings Performance</span>
                         <div class="flex items-end gap-3 mb-4">
                             <h3 class="text-5xl font-black text-slate-800">{{ savings_rate }}%</h3>
-                            <span class="text-sm font-bold text-emerald-500 mb-2 flex items-center">
-                                <span class="material-symbols-outlined text-[18px]">trending_up</span> Good
+                            <span class="text-sm font-bold {% if savings_rate >= 20 %}text-emerald-500{% elif savings_rate >= 0 %}text-amber-500{% else %}text-rose-500{% endif %} mb-2 flex items-center">
+                                <span class="material-symbols-outlined text-[18px]">{% if savings_rate >= 20 %}trending_up{% elif savings_rate >= 0 %}trending_flat{% else %}trending_down{% endif %}</span>
+                                {% if savings_rate >= 20 %}Good{% elif savings_rate >= 0 %}Fair{% else %}Deficit{% endif %}
                             </span>
                         </div>
-                        <p class="text-xs text-slate-500 font-medium leading-relaxed">You are saving <strong>₹{{ savings }}</strong> this month. A rate above 20% is considered architecturally sound.</p>
+                        <p class="text-xs text-slate-500 font-medium leading-relaxed">You are saving <strong>₹{{ savings }}</strong> this month.
+                        {% if emi_burden > 0 %}<br><span class="text-rose-500 font-bold">₹{{ emi_burden }}</span> EMI deducted from gross income of <span class="font-bold">₹{{ gross_income }}</span>.{% endif %}
+                        </p>
                     </div>
                     <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all duration-700"></div>
                 </div>

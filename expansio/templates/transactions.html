@@ -2,7 +2,7 @@
 {% block title %}Transactions{% endblock %}
 
 {% block content %}
-<div class="px-4 md:px-8 py-10 max-w-7xl mx-auto w-full space-y-10 mb-20 md:mb-0">
+<div class="px-4 md:px-8 py-10 max-w-7xl mx-auto w-full space-y-10">
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
@@ -157,6 +157,7 @@ function setTransactionType(type) {
     }
     
     if (typeField) typeField.value = type;
+    filterCategories(type);
 }
 
 // Initialize on load
@@ -165,5 +166,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialType = (typeField && typeField.value) || 'Expense';
     setTransactionType(initialType);
 });
+
+function filterCategories(type) {
+    const categorySelect = document.querySelector('[name=category]') || document.getElementById('id_category');
+    if (!categorySelect) return;
+    const options = categorySelect.querySelectorAll('option');
+    let firstVisible = null;
+    options.forEach(opt => {
+        if (!opt.value) return; // keep the blank/placeholder option
+        const optType = opt.getAttribute('data-type');
+        if (optType && optType !== type) {
+            opt.hidden = true;
+            opt.disabled = true;
+            if (opt.selected) opt.selected = false;
+        } else {
+            opt.hidden = false;
+            opt.disabled = false;
+            if (!firstVisible) firstVisible = opt;
+        }
+    });
+    // Auto-select first matching category if current selection is hidden
+    if (categorySelect.selectedOptions.length > 0 && categorySelect.selectedOptions[0].hidden && firstVisible) {
+        firstVisible.selected = true;
+    }
+}
 </script>
 {% endblock %}

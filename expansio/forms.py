@@ -7,6 +7,21 @@ from .models import Category, Budget, EMI, Transaction
 
 INPUT_CLASS = 'w-full bg-slate-50 border border-slate-200 shadow-sm rounded-xl py-3 px-4 text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all outline-none duration-200'
 
+
+class CategorySelect(forms.Select):
+    """Select widget that adds data-type attribute to each option for JS filtering."""
+
+    def __init__(self, *args, category_types=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._category_types = category_types or {}
+
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        option = super().create_option(name, value, label, selected, index, subindex, attrs)
+        if value and str(value) in self._category_types:
+            option['attrs']['data-type'] = self._category_types[str(value)]
+        return option
+
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
@@ -64,7 +79,15 @@ class TransactionForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user:
-            self.fields['category'].queryset = Category.objects.filter(user=user)
+            qs = Category.objects.filter(user=user)
+            self.fields['category'].queryset = qs
+            # Build type map and swap in the custom widget
+            category_types = {str(c.pk): c.type for c in qs}
+            self.fields['category'].widget = CategorySelect(
+                attrs={'class': INPUT_CLASS},
+                category_types=category_types,
+                choices=self.fields['category'].choices,
+            )
 
     def clean(self):
         cleaned_data = super().clean()

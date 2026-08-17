@@ -108,6 +108,15 @@ class ExpansioWorkflowTests(TestCase):
                 response = self.client.get(reverse(url_name))
                 self.assertEqual(response.status_code, 200)
 
+    def test_auth_pages_render_without_overflow_hidden(self):
+        self.client.logout()
+        for url_name in ('expansio_signup', 'expansio_login'):
+            with self.subTest(url_name=url_name):
+                response = self.client.get(reverse(url_name))
+                self.assertEqual(response.status_code, 200)
+                content = response.content.decode('utf-8')
+                self.assertNotIn('overflow-hidden', content.split('<body')[1].split('>')[0])
+
     def test_home_page_is_public(self):
         self.client.logout()
         response = self.client.get(reverse('expansio_home'))
@@ -229,6 +238,10 @@ class ExpansioWorkflowTests(TestCase):
 
         self.assertEqual(get_response.status_code, 405)
         self.assertRedirects(post_response, reverse('expansio_login'))
+
+    def test_authenticated_user_is_redirected_from_login(self):
+        response = self.client.get(reverse('expansio_login'))
+        self.assertRedirects(response, reverse('expansio_dashboard'))
 
 
 class RailwayDeploymentTests(TestCase):

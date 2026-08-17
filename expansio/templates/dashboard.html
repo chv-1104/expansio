@@ -2,24 +2,24 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="p-4 md:p-8 max-w-7xl mx-auto space-y-10 w-full mb-20 md:mb-0">
+<div class="p-4 md:p-8 max-w-7xl mx-auto space-y-10 w-full">
     <!-- Header Area -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-4 md:mt-0">
         <div>
             <h1 class="text-3xl md:text-5xl font-extrabold text-slate-800 tracking-tight mb-2">Portfolio Overview</h1>
             <div class="flex items-center gap-4 mt-4">
-                <a href="?month={{ prev_month }}&year={{ prev_year }}" class="p-2 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-slate-800 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center active:scale-90" title="Previous Month">
+                <a href="?month={{ prev_month }}&year={{ prev_year }}{% if not show_emi %}&show_emi=false{% endif %}" class="p-2 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-slate-800 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center active:scale-90" title="Previous Month">
                     <span class="material-symbols-outlined text-[20px]">chevron_left</span>
                 </a>
                 <div class="px-5 py-2 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3">
                     <span class="material-symbols-outlined text-slate-400 text-[20px]">calendar_month</span>
                     <span class="text-sm font-bold text-slate-700 tracking-tight">{{ current_month_name }} {{ current_year }}</span>
                 </div>
-                <a href="?month={{ next_month }}&year={{ next_year }}" class="p-2 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-slate-800 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center active:scale-90" title="Next Month">
+                <a href="?month={{ next_month }}&year={{ next_year }}{% if not show_emi %}&show_emi=false{% endif %}" class="p-2 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-slate-800 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center active:scale-90" title="Next Month">
                     <span class="material-symbols-outlined text-[20px]">chevron_right</span>
                 </a>
                 {% if not is_current_period %}
-                <a href="{% url 'expansio_dashboard' %}" class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest hover:underline ms-2">Back to Today</a>
+                <a href="{% url 'expansio_dashboard' %}{% if not show_emi %}?show_emi=false{% endif %}" class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest hover:underline ms-2">Back to Today</a>
                 {% endif %}
             </div>
         </div>
@@ -64,18 +64,21 @@
                    class="p-1.5 px-3 rounded-xl {% if show_emi %}bg-emerald-50 text-emerald-600 border-emerald-100{% else %}bg-slate-50 text-slate-400 border-slate-100{% endif %} text-[9px] font-bold uppercase tracking-widest hover:shadow-sm transition-all active:scale-90 border flex items-center gap-1.5"
                    title="Toggle EMI Deduction">
                     <span class="w-1.5 h-1.5 rounded-full {% if show_emi %}bg-emerald-500 animate-pulse{% else %}bg-slate-300{% endif %}"></span>
-                    EMI: {% if show_emi %}Deducted{% else %}Gross{% endif %}
+                    EMI: {% if show_emi %}On{% else %}Off{% endif %}
                 </a>
             </div>
             <div>
                 <span class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">Monthly Income</span>
                 <p class="text-[10px] text-slate-400 font-medium mt-1 mb-2 truncate">Earned in {{ current_month_name }}</p>
-                <h3 class="text-3xl font-extrabold text-slate-800 mt-1 group-hover:text-emerald-600 transition-colors truncate">₹{{ selected_income|floatformat:2 }}</h3>
-                <div class="flex items-center gap-2 mt-2 h-4">
-                    {% if emi_burden > 0 and show_emi %}
-                    <span class="text-[9px] font-black text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded uppercase border border-rose-100/50">EMI Applied</span>
-                    {% endif %}
+                {% if show_emi and emi_burden > 0 %}
+                <h3 class="text-3xl font-extrabold text-slate-800 mt-1 group-hover:text-emerald-600 transition-colors truncate">₹{{ disposable_income|floatformat:2 }}</h3>
+                <div class="flex items-center gap-3 mt-2 text-[10px] font-bold">
+                    <span class="text-slate-400">Gross ₹{{ gross_income|floatformat:2 }}</span>
+                    <span class="text-rose-500">− EMI ₹{{ emi_burden|floatformat:2 }}</span>
                 </div>
+                {% else %}
+                <h3 class="text-3xl font-extrabold text-slate-800 mt-1 group-hover:text-emerald-600 transition-colors truncate">₹{{ gross_income|floatformat:2 }}</h3>
+                {% endif %}
             </div>
         </div>
 
