@@ -186,13 +186,13 @@ STORAGES = {
     },
 }
 
-# ── Email via Resend (HTTP API — works on Railway) ──────────────────
-EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
+# ── Email via Brevo (HTTP API — works on Railway & sends to ANY recipient) ──
+EMAIL_BACKEND = 'anymail.backends.brevo.EmailBackend'
 ANYMAIL = {
-    'RESEND_API_KEY': os.environ.get('RESEND_API_KEY', ''),
+    'BREVO_API_KEY': os.environ.get('BREVO_API_KEY', ''),
 }
 DEFAULT_FROM_EMAIL = os.environ.get(
-    'DEFAULT_FROM_EMAIL', 'onboarding@resend.dev'
+    'DEFAULT_FROM_EMAIL', 'chvharsh@gmail.com'
 )
 EMAIL_TIMEOUT = 10
 
