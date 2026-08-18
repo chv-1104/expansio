@@ -137,10 +137,14 @@ def signup_view(request):
                     fail_silently=False,
                 )
                 return redirect('expansio_verify_otp')
-            except Exception:
-                logger.exception('Failed to send signup OTP email.')
+            except Exception as exc:
+                logger.exception('Failed to send signup OTP email: %s', exc)
                 clear_signup_session(request)
-                messages.error(request, 'We could not send the verification email. Please try again shortly.')
+                messages.error(
+                    request,
+                    f'We could not send the verification email. '
+                    f'Error: {type(exc).__name__}: {exc}'
+                )
     else:
         form = SignupForm()
     return render(request, 'signup.html', {'form': form})
