@@ -244,68 +244,53 @@ class ExpansioWorkflowTests(TestCase):
         self.assertRedirects(response, reverse('expansio_dashboard'))
 
 
-class RailwayDeploymentTests(TestCase):
+class DeploymentAndDatabaseTests(TestCase):
     def tearDown(self):
         import project.settings as settings_module
         import importlib
         importlib.reload(settings_module)
 
-    def test_railway_public_domain_and_mysql_settings(self):
+    def test_pythonanywhere_domain_and_sqlite_settings(self):
         import importlib
         import os
         from unittest.mock import patch
         import project.settings as settings_module
 
         env_vars = {
-            'SECRET_KEY': 'django-insecure-test-key-for-railway-deployment-tests',
+            'SECRET_KEY': 'django-insecure-test-key-for-pythonanywhere-deployment-tests',
             'DEBUG': 'False',
-            'RAILWAY_PUBLIC_DOMAIN': 'https://expansio.up.railway.app/',
-            'DATABASE_URL': 'mysql://root:password@mysql.railway.internal:3306/railway',
-        }
-        with patch.dict(os.environ, env_vars):
-            importlib.reload(settings_module)
-            self.assertIn('expansio.up.railway.app', settings_module.ALLOWED_HOSTS)
-            self.assertIn('https://expansio.up.railway.app', settings_module.CSRF_TRUSTED_ORIGINS)
-            self.assertEqual(
-                settings_module.DATABASES['default']['ENGINE'],
-                'django.db.backends.mysql'
-            )
-            self.assertEqual(
-                settings_module.DATABASES['default']['NAME'],
-                'railway'
-            )
-
-    def test_railway_mysql_individual_env_variables(self):
-        import importlib
-        import os
-        from unittest.mock import patch
-        import project.settings as settings_module
-
-        env_vars = {
-            'SECRET_KEY': 'django-insecure-test-key-for-railway-deployment-tests',
-            'DEBUG': 'False',
+            'PYTHONANYWHERE_DOMAIN': 'https://expansio.pythonanywhere.com/',
             'DATABASE_URL': '',
-            'MYSQL_URL': '',
-            'MYSQLDATABASE': 'expansio_prod',
-            'MYSQLUSER': 'db_user',
-            'MYSQLPASSWORD': 'secretpassword',
-            'MYSQLHOST': 'mysql.internal',
-            'MYSQLPORT': '3306',
+        }
+        with patch.dict(os.environ, env_vars):
+            importlib.reload(settings_module)
+            self.assertIn('expansio.pythonanywhere.com', settings_module.ALLOWED_HOSTS)
+            self.assertIn('https://expansio.pythonanywhere.com', settings_module.CSRF_TRUSTED_ORIGINS)
+            self.assertEqual(
+                settings_module.DATABASES['default']['ENGINE'],
+                'django.db.backends.sqlite3'
+            )
+            self.assertTrue(
+                str(settings_module.DATABASES['default']['NAME']).endswith('db.sqlite3')
+            )
+
+    def test_custom_database_url_support(self):
+        import importlib
+        import os
+        from unittest.mock import patch
+        import project.settings as settings_module
+
+        env_vars = {
+            'SECRET_KEY': 'django-insecure-test-key',
+            'DATABASE_URL': 'sqlite:///custom.sqlite3',
         }
         with patch.dict(os.environ, env_vars):
             importlib.reload(settings_module)
             self.assertEqual(
                 settings_module.DATABASES['default']['ENGINE'],
-                'django.db.backends.mysql'
+                'django.db.backends.sqlite3'
             )
-            self.assertEqual(
-                settings_module.DATABASES['default']['NAME'],
-                'expansio_prod'
-            )
-            self.assertEqual(
-                settings_module.DATABASES['default']['USER'],
-                'db_user'
-            )
+            self.assertIn('custom.sqlite3', str(settings_module.DATABASES['default']['NAME']))
 
     def test_build_time_defaults_allow_collectstatic_without_secrets(self):
         import importlib
@@ -317,9 +302,6 @@ class RailwayDeploymentTests(TestCase):
             'SECRET_KEY': '',
             'DEBUG': 'False',
             'DATABASE_URL': '',
-            'MYSQL_URL': '',
-            'MYSQLDATABASE': '',
-            'MYSQL_DATABASE': '',
         }
         with patch.dict(os.environ, env_vars):
             importlib.reload(settings_module)
@@ -328,5 +310,6 @@ class RailwayDeploymentTests(TestCase):
                 settings_module.DATABASES['default']['ENGINE'],
                 'django.db.backends.sqlite3'
             )
+
 
 

@@ -36,9 +36,22 @@ if not SECRET_KEY or SECRET_KEY == 'replace-with-a-long-random-secret':
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.railway.app').split(',')
+    for host in os.environ.get(
+        'ALLOWED_HOSTS',
+        'localhost,127.0.0.1,.pythonanywhere.com,.railway.app'
+    ).split(',')
     if host.strip()
 ]
+pythonanywhere_domain = (
+    os.environ.get('PYTHONANYWHERE_DOMAIN', '')
+    .strip()
+    .removeprefix('https://')
+    .removeprefix('http://')
+    .rstrip('/')
+)
+if pythonanywhere_domain and pythonanywhere_domain not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(pythonanywhere_domain)
+
 railway_public_domain = (
     os.environ.get('RAILWAY_PUBLIC_DOMAIN', '')
     .strip()
@@ -51,9 +64,13 @@ if railway_public_domain and railway_public_domain not in ALLOWED_HOSTS:
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
-    for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
+    for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://*.pythonanywhere.com').split(',')
     if origin.strip()
 ]
+if pythonanywhere_domain:
+    pa_origin = f'https://{pythonanywhere_domain}'
+    if pa_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(pa_origin)
 if railway_public_domain:
     railway_origin = f'https://{railway_public_domain}'
     if railway_origin not in CSRF_TRUSTED_ORIGINS:
@@ -69,7 +86,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'anymail',
     'expansio',
 ]
 
@@ -104,44 +120,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project.wsgi.application'
 
 
-DATABASE_URL = os.environ.get('DATABASE_URL') or os.environ.get('MYSQL_URL')
-
-mysql_db = os.environ.get('MYSQLDATABASE') or os.environ.get('MYSQL_DATABASE')
-mysql_user = os.environ.get('MYSQLUSER') or os.environ.get('MYSQL_USER')
-mysql_password = os.environ.get('MYSQLPASSWORD') or os.environ.get('MYSQL_PASSWORD', '')
-mysql_host = os.environ.get('MYSQLHOST') or os.environ.get('MYSQL_HOST')
-mysql_port = os.environ.get('MYSQLPORT') or os.environ.get('MYSQL_PORT', '3306')
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
-elif mysql_db and (mysql_host or mysql_user):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': mysql_db,
-            'USER': mysql_user or 'root',
-            'PASSWORD': mysql_password,
-            'HOST': mysql_host or '127.0.0.1',
-            'PORT': int(mysql_port) if str(mysql_port).isdigit() else 3306,
-            'CONN_MAX_AGE': 600,
-        }
-    }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'expansio.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
-if DATABASES['default'].get('ENGINE') == 'django.db.backends.mysql':
-    DATABASES['default'].setdefault('OPTIONS', {})
-    DATABASES['default']['OPTIONS'].setdefault('charset', 'utf8mb4')
-    DATABASES['default']['OPTIONS'].setdefault(
-        'init_command', "SET sql_mode='STRICT_TRANS_TABLES'"
-    )
 
 
 # Password validation
@@ -186,15 +177,22 @@ STORAGES = {
     },
 }
 
-# ── Email via Brevo (HTTP API — works on Railway & sends to ANY recipient) ──
-EMAIL_BACKEND = 'anymail.backends.brevo.EmailBackend'
-ANYMAIL = {
-    'BREVO_API_KEY': os.environ.get('BREVO_API_KEY', ''),
-}
-DEFAULT_FROM_EMAIL = os.environ.get(
-    'DEFAULT_FROM_EMAIL', 'chvharsh@gmail.com'
+# ── Email via Gmail SMTP ──
+EMAIL_BACKEND = os.environ.get(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.smtp.EmailBackend'
 )
-EMAIL_TIMEOUT = 10
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = env_bool('EMAIL_USE_TLS', True)
+EMAIL_USE_SSL = env_bool('EMAIL_USE_SSL', False)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'chvharsh@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'wqqx hsmt bcfe tlkj').replace(' ', '')
+DEFAULT_FROM_EMAIL = os.environ.get(
+    'DEFAULT_FROM_EMAIL',
+    f'Expansio <{EMAIL_HOST_USER}>' if EMAIL_HOST_USER else 'chvharsh@gmail.com'
+)
+EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', 15))
 
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'

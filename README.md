@@ -7,7 +7,7 @@ Expansio is a full-featured personal finance and budgeting web application built
 ## 🚀 Key Features & Architectural Highlights
 
 1. **Secure Email OTP Authentication**
-   - User registration with session-hashed OTP verification via Gmail SMTP (`secrets.randbelow`, expiry timestamps, attempt limits).
+   - User registration with session-hashed OTP verification via Brevo API (`secrets.randbelow`, expiry timestamps, attempt limits).
    - Atomic database operations (`transaction.atomic()`) ensuring zero orphaned user profiles or partial signups.
    - Form-level validation with custom validators for email uniqueness and password complexity.
 
@@ -30,16 +30,17 @@ Expansio is a full-featured personal finance and budgeting web application built
 
 6. **Production & Interview Readiness**
    - Automated unit & integration tests covering auth, financial models, EMI burden, category filters, and edge cases.
-   - Fully configured for local SQLite development and cloud deployments (Railway / Docker / MySQL) via `DATABASE_URL` / `MYSQL_URL` / `MYSQL_*` and `PyMySQL`.
+   - Fully configured with **SQLite** (`db.sqlite3`) for persistent, zero-maintenance storage on **PythonAnywhere** and local development.
    - Django Admin fully registered with search, list filters, and select-related optimizations.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend:** Python 3.10+, Django 4.2+ / 5.x
-- **Database:** SQLite (local development default) / MySQL (production via `DATABASE_URL` or `MYSQL_URL`)
-- **Static Assets:** WhiteNoise with Manifest caching
+- **Backend:** Python 3.10+, Django 5.x
+- **Database:** SQLite (`db.sqlite3`) — persistent, reliable, zero-config
+- **WSGI / Web Server:** PythonAnywhere WSGI / Gunicorn / WhiteNoise
+- **Email Delivery:** Gmail SMTP (`django.core.mail.backends.smtp.EmailBackend`)
 - **Styling & UI:** Tailwind CSS, Material Symbols, Glassmorphism design tokens
 
 ---
@@ -64,17 +65,14 @@ Generate a secure secret key and set it in `.env`:
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-Add your Gmail credentials in `.env`:
+Configure `.env`:
 ```env
 DEBUG=True
 SECRET_KEY=your-generated-secret-key
-ALLOWED_HOSTS=localhost,127.0.0.1
-
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER=your-email@gmail.com
-EMAIL_HOST_PASSWORD=your-16-char-gmail-app-password
+ALLOWED_HOSTS=localhost,127.0.0.1,.pythonanywhere.com
+CSRF_TRUSTED_ORIGINS=https://*.pythonanywhere.com
+BREVO_API_KEY=your_brevo_api_key
+DEFAULT_FROM_EMAIL=your-verified-email@gmail.com
 ```
 
 ### 3. Run Migrations & Seed Sample Data
@@ -98,41 +96,86 @@ Run the test suite:
 python manage.py test
 ```
 
-Run deployment security checks:
+Run deployment check:
 ```powershell
-python manage.py check --deploy
+python manage.py check
 ```
 
 Verify static collection:
 ```powershell
-python manage.py collectstatic --noinput --dry-run
+python manage.py collectstatic --noinput
 ```
 
 ---
 
-## Railway Deployment
+## 🌐 PythonAnywhere Deployment Guide
 
-The repository contains `railway.json`, which collects static files during the build, runs migrations before deployment, starts Gunicorn on Railway's assigned port, and checks `/health/` before routing traffic.
+Deploying Expansio to PythonAnywhere is fast, reliable, and completely free using SQLite persistent storage.
 
-1. Push the repository to GitHub and create a Railway service from it.
-2. Add a Railway **MySQL** database service in the same project.
-3. In your web service environment variables on Railway, add:
-   - `DATABASE_URL`: set to `${{MySQL.MYSQL_URL}}` (or `${{MySQL.DATABASE_URL}}` via Railway's reference picker)
-4. Add these web-service variables (do not upload or commit your local `.env` file):
-
-```env
-DEBUG=False
-SECRET_KEY=generate-a-new-long-random-value
-ALLOWED_HOSTS=your-service.up.railway.app
-CSRF_TRUSTED_ORIGINS=https://your-service.up.railway.app
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER=your-gmail-address@gmail.com
-EMAIL_HOST_PASSWORD=your-gmail-app-password
-DEFAULT_FROM_EMAIL=your-gmail-address@gmail.com
+### 1. Clone Repository in PythonAnywhere Bash Console
+Open a **Bash console** from your PythonAnywhere Dashboard:
+```bash
+git clone <your-repo-url> expansio_repo
+cd expansio_repo/expansio
 ```
 
-5. Generate a public domain in Railway Networking, replace `your-service.up.railway.app`, and deploy. The `/health/` endpoint will return `{"status": "ok"}`.
+### 2. Create and Activate Virtual Environment
+```bash
+python3.12 -m venv ~/.virtualenvs/expansio-env
+source ~/.virtualenvs/expansio-env/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-Railway's MySQL connection is required in production. The local SQLite database is deliberately blocked when `DEBUG=False`, preventing accidental deployment with ephemeral data.
+### 3. Set Up Environment Variables & Run Migrations
+Create your `.env` file in the project folder (`/home/<username>/expansio_repo/expansio/.env`):
+```bash
+cat << 'EOF' > .env
+DEBUG=False
+SECRET_KEY=generate-a-strong-random-key-here
+ALLOWED_HOSTS=localhost,127.0.0.1,<your-username>.pythonanywhere.com
+CSRF_TRUSTED_ORIGINS=https://<your-username>.pythonanywhere.com
+BREVO_API_KEY=your_brevo_api_key
+DEFAULT_FROM_EMAIL=your_email@gmail.com
+EOF
+```
+
+Run database migrations, create superuser, and collect static files:
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py collectstatic --noinput
+```
+
+### 4. Configure PythonAnywhere Web Tab
+1. Go to the **Web** tab in PythonAnywhere.
+2. Click **Add a new web app** -> Choose **Manual configuration** -> Select **Python 3.12** (or your preferred Python 3.x version).
+3. Set the directory paths:
+   - **Source code**: `/home/<username>/expansio_repo/expansio`
+   - **Working directory**: `/home/<username>/expansio_repo/expansio`
+   - **Virtualenv**: `/home/<username>/.virtualenvs/expansio-env`
+
+4. Set up **Static files** mappings in the Web tab:
+   - URL: `/static/`
+   - Directory: `/home/<username>/expansio_repo/expansio/staticfiles`
+
+5. Edit the **WSGI configuration file** (click the link under the WSGI section):
+```python
+import os
+import sys
+from pathlib import Path
+
+# Path to project directory
+path = '/home/<username>/expansio_repo/expansio'
+if path not in sys.path:
+    sys.path.append(path)
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'project.settings'
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+```
+
+6. Click the green **Reload <username>.pythonanywhere.com** button.
+7. Open `https://<username>.pythonanywhere.com` to see your live Expansio app!
+
