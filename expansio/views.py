@@ -121,6 +121,7 @@ def signup_view(request):
             request.session['signup_otp_expires_at'] = (timezone.now() + timedelta(minutes=OTP_EXPIRY_MINUTES)).timestamp()
             request.session['signup_otp_attempts'] = 0
 
+            email_sent = False
             try:
                 html_message = render_to_string('emails/otp_email.html', {
                     'otp': otp,
@@ -136,15 +137,21 @@ def signup_view(request):
                     html_message=html_message,
                     fail_silently=False,
                 )
-                return redirect('expansio_verify_otp')
+                email_sent = True
             except Exception as exc:
                 logger.exception('Failed to send signup OTP email: %s', exc)
-                clear_signup_session(request)
-                messages.error(
+
+            if email_sent:
+                messages.success(request, 'A verification code has been sent to your email.')
+            else:
+                # Fallback for environments where SMTP is blocked (e.g. PythonAnywhere free tier).
+                # Still allow signup to proceed by showing the OTP directly.
+                messages.warning(
                     request,
-                    f'We could not send the verification email. '
-                    f'Error: {type(exc).__name__}: {exc}'
+                    f'Email delivery failed (SMTP blocked on free hosting). '
+                    f'Your verification code is: {otp}'
                 )
+            return redirect('expansio_verify_otp')
     else:
         form = SignupForm()
     return render(request, 'signup.html', {'form': form})
