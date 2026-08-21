@@ -12,13 +12,13 @@
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
     <link rel="apple-touch-icon" href="{% static 'img/app-icon.png' %}">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap"
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <style>
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Sans', sans-serif;
         }
 
         .material-symbols-outlined {
@@ -36,25 +36,26 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #d4c8b8;
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: #b8a896;
         }
 
         /* Interactive element transitions */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.75);
+            background: rgba(255, 254, 251, 0.8);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(230, 221, 209, 0.6);
+            border-radius: 1.25rem;
         }
 
         /* Auth background gradient animation */
         .gradient-bg {
-            background: linear-gradient(-45deg, #eef2ff, #f0fdf4, #fff1f2, #faf5ff);
+            background: linear-gradient(-45deg, #faf8f5, #f5efe6, #fdf0e8, #f0ede6);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
         }
@@ -78,26 +79,51 @@
             theme: {
                 extend: {
                     colors: {
-                        indigo: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            500: '#64748b',
-                            600: '#475569',
-                            900: '#1e293b',
+                        cream: {
+                            50: '#fffefb',
+                            100: '#faf8f5',
+                            200: '#f5f0ea',
+                            300: '#e8ddd0',
+                            400: '#d4c8b8',
+                            500: '#b8a896',
                         },
-                        emerald: {
-                            50: '#f0fdf4',
-                            500: '#10b981',
-                            600: '#059669',
+                        earth: {
+                            600: '#7a6e5d',
+                            700: '#5c5245',
+                            800: '#3d2e1f',
+                            900: '#2c2418',
                         },
-                        rose: {
-                            50: '#fff1f2',
-                            500: '#f43f5e',
-                            600: '#e11d48',
-                        }
+                        terra: {
+                            50: '#fdf0e8',
+                            100: '#f9dcc8',
+                            200: '#e8b68a',
+                            500: '#b8621b',
+                            600: '#9a5118',
+                            700: '#7d4215',
+                        },
+                        sage: {
+                            50: '#f0f4f0',
+                            100: '#dce6dc',
+                            200: '#b8d0b8',
+                            500: '#5d7a61',
+                            600: '#4d6650',
+                        },
+                        warmrose: {
+                            50: '#faf0ef',
+                            100: '#f2dbd8',
+                            200: '#e0b5b0',
+                            500: '#b85c5c',
+                            600: '#9e4a4a',
+                        },
+                        golden: {
+                            50: '#fdf6e8',
+                            100: '#f7e8c4',
+                            500: '#c8943e',
+                            600: '#a87930',
+                        },
                     },
                     fontFamily: {
-                        sans: ["Outfit", "sans-serif"],
+                        sans: ["DM Sans", "sans-serif"],
                     },
                 },
             },
@@ -106,7 +132,7 @@
 </head>
 
 <body
-    class="bg-slate-100/80 text-slate-700 min-h-screen flex flex-col md:flex-row {% if not user.is_authenticated or request.resolver_match.url_name == 'expansio_home' %}gradient-bg{% endif %}">
+    class="bg-cream-100 text-earth-600 min-h-screen flex flex-col md:flex-row {% if not user.is_authenticated or request.resolver_match.url_name == 'expansio_home' %}gradient-bg{% endif %}">
 
     {% if user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}
     {% include 'components/sidebar.html' %}

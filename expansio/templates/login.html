@@ -1,50 +1,49 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Log In{% endblock %}
 
 {% block content %}
 <div class="w-full max-w-md mx-auto z-10 my-auto py-6 sm:py-10">
-    <div class="glass-panel p-6 sm:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full transition-all duration-500 hover:shadow-[0_8px_30px_rgb(99,102,241,0.1)] relative overflow-hidden">
-        <!-- Decorative blob -->
-        <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl"></div>
-        <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-rose-500/10 rounded-full blur-3xl"></div>
+    <div class="bg-cream-50/95 backdrop-blur-md p-6 sm:p-10 rounded-3xl shadow-xl shadow-earth-900/5 border border-cream-300 w-full transition-all duration-300 relative overflow-hidden">
+        <!-- Decorative blobs -->
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-terra-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-golden-500/10 rounded-full blur-3xl"></div>
         
-        <div class="text-center mb-10 relative z-10">
-            <div class="w-20 h-20 rounded-3xl bg-white mx-auto flex items-center justify-center shadow-xl shadow-indigo-100 mb-6 border border-slate-100 transform -rotate-3 hover:rotate-0 transition-all duration-300">
-                <span class="material-symbols-outlined text-4xl text-indigo-600">account_balance</span>
+        <div class="text-center mb-8 relative z-10">
+            <div class="w-16 h-16 rounded-2xl bg-cream-100 mx-auto flex items-center justify-center shadow-sm mb-4 border border-cream-300 overflow-hidden p-1.5">
+                <img src="{% static 'img/favicon.png' %}" alt="Expansio" class="w-full h-full object-contain rounded-xl">
             </div>
-            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Welcome Back</h2>
-            <p class="text-slate-500 font-medium mt-2">Sign in to your financial architecture.</p>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-earth-900 tracking-tight">Welcome Back</h2>
+            <p class="text-earth-600 font-medium text-xs sm:text-sm mt-1">Sign in to your financial overview.</p>
         </div>
         
         {% if messages %}
             {% for message in messages %}
-            <div class="bg-rose-50 border border-rose-100 text-rose-600 px-4 py-3 rounded-xl text-sm font-semibold mb-6 text-center flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">error</span>
+            <div class="bg-warmrose-50 border border-warmrose-200 text-warmrose-600 px-4 py-2.5 rounded-xl text-xs font-semibold mb-5 text-center flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[16px]">error</span>
                 {{ message }}
             </div>
             {% endfor %}
         {% endif %}
 
-        <form method="post" class="space-y-5 relative z-10">
+        <form method="post" class="space-y-4 relative z-10">
             {% csrf_token %}
             {% for field in form %}
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ms-1">{{ field.label }}</label>
+                <label class="block text-[11px] font-bold text-earth-600 uppercase tracking-wider mb-1.5 ms-1">{{ field.label }}</label>
                 {{ field }}
                 {% if field.errors %}
-                <p class="text-rose-500 text-xs mt-1 font-medium ms-1">{{ field.errors.0 }}</p>
+                <p class="text-warmrose-500 text-xs mt-1 font-medium ms-1">{{ field.errors.0 }}</p>
                 {% endif %}
             </div>
             {% endfor %}
-            <button type="submit" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold mt-8 shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all text-sm tracking-wide">
+            <button type="submit" class="w-full bg-terra-500 text-white py-3.5 rounded-xl font-bold mt-6 shadow-md shadow-terra-500/20 hover:bg-terra-600 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm tracking-wide">
                 Secure Log In
             </button>
         </form>
         
-
-        
-        <div class="mt-8 text-center text-sm font-medium text-slate-500 relative z-10">
-            Don't have an account? <a href="{% url 'expansio_signup' %}" class="text-indigo-600 font-bold hover:text-indigo-700 hover:underline underline-offset-4 decoration-2">Sign up</a>
+        <div class="mt-6 text-center text-xs font-medium text-earth-600 relative z-10">
+            Don't have an account? <a href="{% url 'expansio_signup' %}" class="text-terra-500 font-bold hover:text-terra-600 hover:underline underline-offset-4">Sign up</a>
         </div>
     </div>
 </div>

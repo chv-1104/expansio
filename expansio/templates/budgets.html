@@ -2,16 +2,16 @@
 {% block title %}Budgets{% endblock %}
 
 {% block content %}
-<div class="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-10">
+<div class="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8">
     <!-- Header Section -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mt-4 md:mt-0">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-2 md:mt-0">
         <div>
-            <span class="text-slate-500 font-bold text-xs tracking-[0.2em] uppercase mb-2 block">Overview</span>
-            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-800">Monthly Budgets</h1>
+            <span class="text-earth-600 font-bold text-xs tracking-[0.2em] uppercase mb-1 block">Overview</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-earth-900">Monthly Budgets</h1>
         </div>
         <div class="flex gap-3">
-            <a href="#budget-form" class="bg-slate-200 text-slate-700 px-6 py-3 rounded-2xl font-bold text-sm hover:bg-slate-300 transition-all flex items-center gap-2">
-                <span class="material-symbols-outlined text-lg">add_task</span>
+            <a href="#budget-form" class="bg-cream-50 border border-cream-300 text-earth-900 px-5 py-2.5 rounded-2xl font-bold text-sm hover:bg-cream-200 transition-all flex items-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined text-lg text-terra-500">add_task</span>
                 New Limit
             </a>
         </div>
@@ -19,71 +19,71 @@
     
     <!-- Stats Highlighting -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-indigo-950 p-6 rounded-3xl shadow-xl shadow-slate-200 text-white relative overflow-hidden group flex items-center gap-5 h-32">
-            <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 border border-white/10">
-                <span class="material-symbols-outlined text-indigo-200 text-3xl">account_balance_wallet</span>
+        <div class="bg-gradient-to-br from-earth-800 to-earth-900 p-6 rounded-3xl shadow-lg shadow-earth-900/10 text-white relative overflow-hidden group flex items-center gap-4 h-28">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 border border-white/10">
+                <span class="material-symbols-outlined text-terra-200 text-2xl">account_balance_wallet</span>
             </div>
             <div>
-                <p class="text-indigo-200/60 text-[10px] uppercase tracking-[0.2em] font-black mb-0.5">Monthly Budget</p>
-                <h3 class="text-3xl font-black tracking-tighter">₹{{ total_budget|floatformat:2|default:'0.00' }}</h3>
+                <p class="text-cream-300 text-[10px] uppercase tracking-[0.2em] font-bold mb-0.5">Monthly Budget</p>
+                <h3 class="text-2xl font-extrabold tracking-tight">₹{{ total_budget|floatformat:2|default:'0.00' }}</h3>
             </div>
-            <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl"></div>
+            <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-terra-500/10 rounded-full blur-2xl"></div>
         </div>
         
-        <div class="bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex items-center gap-5 h-32">
-            <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100/50">
-                <span class="material-symbols-outlined text-3xl">trending_down</span>
+        <div class="bg-cream-50 p-6 rounded-3xl shadow-sm border border-cream-300 flex items-center gap-4 h-28">
+            <div class="w-12 h-12 rounded-2xl bg-warmrose-50 text-warmrose-600 border border-warmrose-100 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">trending_down</span>
             </div>
             <div>
-                <p class="text-slate-400 text-[10px] uppercase tracking-[0.2em] font-black mb-0.5">Total Spent</p>
-                <h3 class="text-3xl font-black tracking-tighter text-slate-800">₹{{ total_spent|floatformat:2|default:'0.00' }}</h3>
+                <p class="text-earth-600 text-[10px] uppercase tracking-[0.2em] font-bold mb-0.5">Total Spent</p>
+                <h3 class="text-2xl font-extrabold tracking-tight text-earth-900">₹{{ total_spent|floatformat:2|default:'0.00' }}</h3>
             </div>
         </div>
 
-        <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-200 flex items-center justify-between h-32 group cursor-pointer hover:border-indigo-400 hover:bg-white transition-all" onclick="document.getElementById('budget-form').scrollIntoView({behavior: 'smooth'})">
-            <div class="flex items-center gap-5">
-                <div class="w-14 h-14 rounded-2xl bg-white text-slate-400 flex items-center justify-center shrink-0 shadow-sm border border-slate-100 group-hover:text-indigo-600 group-hover:border-indigo-100 transition-colors">
-                    <span class="material-symbols-outlined text-3xl">add_circle</span>
+        <div class="bg-cream-50 p-6 rounded-3xl border-2 border-dashed border-cream-300 flex items-center justify-between h-28 group cursor-pointer hover:border-terra-500 hover:bg-cream-100 transition-all" onclick="document.getElementById('budget-form').scrollIntoView({behavior: 'smooth'})">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-cream-200 text-earth-600 flex items-center justify-center shrink-0 shadow-sm border border-cream-300 group-hover:text-terra-500 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">add_circle</span>
                 </div>
                 <div>
-                    <p class="text-slate-400 text-[10px] uppercase tracking-[0.2em] font-black mb-0.5 group-hover:text-indigo-600">Action</p>
-                    <h3 class="text-lg font-black text-slate-600 group-hover:text-slate-800">New Category</h3>
+                    <p class="text-earth-600 text-[10px] uppercase tracking-[0.2em] font-bold mb-0.5 group-hover:text-terra-500">Action</p>
+                    <h3 class="text-base font-bold text-earth-800">New Category</h3>
                 </div>
             </div>
-            <span class="material-symbols-outlined text-slate-300 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all">chevron_right</span>
+            <span class="material-symbols-outlined text-cream-400 group-hover:text-terra-500 group-hover:translate-x-1 transition-all">chevron_right</span>
         </div>
     </div>
 
     <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <!-- Sidebar: Form -->
         <div class="lg:col-span-4 lg:sticky lg:top-8 h-fit">
-            <div id="budget-form" class="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 relative overflow-hidden">
+            <div id="budget-form" class="bg-cream-50 p-7 rounded-[2rem] shadow-sm border border-cream-300 relative overflow-hidden">
                 <div class="relative z-10">
-                    <h3 class="text-2xl font-black text-slate-800 mb-2 flex items-center gap-3">
-                        <span class="material-symbols-outlined text-slate-600">settings</span> Budget Setup
+                    <h3 class="text-xl font-bold text-earth-900 mb-1 flex items-center gap-2.5">
+                        <span class="material-symbols-outlined text-terra-500">settings</span> Budget Setup
                     </h3>
-                    <p class="text-xs text-slate-500 mb-8 font-medium italic">Define spending limits for specific categories.</p>
+                    <p class="text-xs text-earth-600 mb-6 font-medium">Define spending limits for specific categories.</p>
                     
                     <form method="post" class="flex flex-col gap-4">
                         {% csrf_token %}
                         {% for field in form %}
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ms-1">{{ field.label }}</label>
+                            <label class="block text-[10px] font-bold text-earth-600 uppercase tracking-widest mb-1.5 ms-1">{{ field.label }}</label>
                             <div class="relative group">
                                 {{ field }}
                             </div>
                             {% if field.errors %}
-                            <p class="text-rose-500 text-[10px] font-bold mt-1 ms-1">{{ field.errors.0 }}</p>
+                            <p class="text-warmrose-500 text-[10px] font-bold mt-1 ms-1">{{ field.errors.0 }}</p>
                             {% endif %}
                         </div>
                         {% endfor %}
                         
                         {% if form.non_field_errors %}
-                        <p class="text-rose-500 text-xs font-bold mb-2">{{ form.non_field_errors.0 }}</p>
+                        <p class="text-warmrose-500 text-xs font-bold mb-2">{{ form.non_field_errors.0 }}</p>
                         {% endif %}
                         
-                        <button type="submit" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold text-sm mt-4 hover:bg-slate-900 shadow-xl shadow-slate-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                        <button type="submit" class="w-full bg-terra-500 text-white py-3.5 rounded-2xl font-bold text-sm mt-3 hover:bg-terra-600 shadow-md shadow-terra-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                             <span class="material-symbols-outlined text-lg">save</span> Save Budget Limit
                         </button>
                     </form>
@@ -92,69 +92,73 @@
         </div>
 
         <!-- Main Column: List -->
-        <div class="lg:col-span-8 space-y-6">
-            <div class="flex items-center justify-between mb-4 px-2">
-                <h4 class="text-xl font-black text-slate-800 uppercase tracking-tight">Active Limits</h4>
-                <p class="text-xs text-slate-500 font-bold tracking-wider">{{ budget_data|length }} Categories</p>
+        <div class="lg:col-span-8 space-y-5">
+            <div class="flex items-center justify-between mb-2 px-2">
+                <h4 class="text-lg font-bold text-earth-900 uppercase tracking-tight">Active Limits</h4>
+                <p class="text-xs text-earth-600 font-bold tracking-wider">{{ budget_data|length }} Categories</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {% for data in budget_data %}
-                <div class="bg-white p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 {% if data.is_exceeded %}border-rose-200{% else %}border-slate-100 hover:border-slate-200{% endif %} flex flex-col justify-between h-[16rem] group">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm {{ data.budget.category.color_class|default:'bg-slate-50 text-slate-600' }}">
-                            <span class="material-symbols-outlined text-[28px]">{{ data.budget.category.icon|default:'category' }}</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            {% if data.is_exceeded %}
-                            <span class="bg-rose-50 border border-rose-100 text-rose-600 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px]">warning</span> Over Limit
-                            </span>
-                            {% elif data.is_warning %}
-                            <span class="bg-amber-50 border border-amber-100 text-amber-600 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider">Warning</span>
-                            {% endif %}
-                            
-                            <div class="flex opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button type="button" onclick="editBudget('{{ data.budget.category.id }}', '{{ data.budget.amount_limit|floatformat:2|safe }}')" class="p-2 text-slate-400 hover:text-slate-700 transition-colors" title="Edit Limit">
-                                    <span class="material-symbols-outlined text-[20px]">edit</span>
-                                </button>
-                                <form method="post" action="{% url 'expansio_delete_budget' data.budget.pk %}" class="inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="p-2 text-slate-400 hover:text-rose-600 transition-colors" title="Remove Budget" onclick="return confirm('Remove budget limit for {{ data.budget.category.name }}?')">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                <div class="bg-cream-50 p-6 rounded-[2rem] shadow-sm border hover:shadow-md transition-all duration-200 {% if data.is_exceeded %}border-warmrose-200 bg-warmrose-50/20{% else %}border-cream-300 hover:border-cream-400{% endif %} flex flex-col justify-between h-[15rem] group">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm bg-cream-200 text-earth-700 border border-cream-300">
+                                <span class="material-symbols-outlined text-[24px]">{{ data.budget.category.icon|default:'category' }}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                {% if data.is_exceeded %}
+                                <span class="bg-warmrose-50 border border-warmrose-200 text-warmrose-600 text-[10px] font-bold px-2 py-0.5 rounded-lg uppercase tracking-wider flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[13px]">warning</span> Over Limit
+                                </span>
+                                {% elif data.is_warning %}
+                                <span class="bg-golden-50 border border-golden-100 text-golden-600 text-[10px] font-bold px-2 py-0.5 rounded-lg uppercase tracking-wider">Warning</span>
+                                {% endif %}
+                                
+                                <div class="flex opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button type="button" onclick="editBudget('{{ data.budget.category.id }}', '{{ data.budget.amount_limit|floatformat:2|safe }}')" class="p-1.5 text-cream-500 hover:text-earth-900 transition-colors" title="Edit Limit">
+                                        <span class="material-symbols-outlined text-[18px]">edit</span>
                                     </button>
-                                </form>
+                                    <form method="post" action="{% url 'expansio_delete_budget' data.budget.pk %}" class="inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="p-1.5 text-cream-500 hover:text-warmrose-600 transition-colors" title="Remove Budget" onclick="return confirm('Remove budget limit for {{ data.budget.category.name }}?')">
+                                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
+                        
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="text-lg font-bold text-earth-900 group-hover:text-terra-500 transition-colors">{{ data.budget.category.name }}</h4>
+                            <a href="{% url 'expansio_transactions' %}?category={{ data.budget.category.id }}" class="w-7 h-7 rounded-full bg-cream-200 flex items-center justify-center text-earth-600 hover:bg-terra-500 hover:text-white transition-all shadow-sm" title="View Transactions">
+                                <span class="material-symbols-outlined text-[16px]">visibility</span>
+                            </a>
+                        </div>
                     </div>
                     
-                    <div class="flex justify-between items-center mb-1">
-                        <h4 class="text-xl font-extrabold text-slate-800 group-hover:text-slate-900 transition-colors">{{ data.budget.category.name }}</h4>
-                        <a href="{% url 'expansio_transactions' %}?category={{ data.budget.category.id }}" class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-700 hover:text-white transition-all shadow-sm" title="View Transactions">
-                            <span class="material-symbols-outlined text-[18px]">visibility</span>
-                        </a>
-                    </div>
-                    
-                    <div class="flex justify-between items-end mt-4">
-                        <span class="text-2xl font-bold tracking-tight {% if data.is_exceeded %}text-rose-600{% else %}text-slate-800{% endif %}">
-                            ₹{{ data.spent|floatformat:2 }} 
-                            <span class="text-sm font-medium text-slate-400">/ ₹{{ data.budget.amount_limit|floatformat:2 }}</span>
-                        </span>
-                        <span class="text-sm font-bold {% if data.is_exceeded %}text-rose-600{% elif data.is_warning %}text-amber-500{% else %}text-slate-500{% endif %}">
-                            {{ data.percentage }}%
-                        </span>
-                    </div>
-                    <div class="mt-5 w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full transition-all duration-1000 ease-out {% if data.is_exceeded %}bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.4)]{% elif data.is_warning %}bg-amber-500{% else %}bg-slate-500 shadow-[0_0_10px_rgba(71,85,105,0.2)]{% endif %}" style="width: {{ data.bar_percentage|default:data.percentage }}%"></div>
+                    <div>
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xl font-bold tracking-tight {% if data.is_exceeded %}text-warmrose-600{% else %}text-earth-900{% endif %}">
+                                ₹{{ data.spent|floatformat:2 }} 
+                                <span class="text-xs font-medium text-cream-500">/ ₹{{ data.budget.amount_limit|floatformat:2 }}</span>
+                            </span>
+                            <span class="text-xs font-bold {% if data.is_exceeded %}text-warmrose-600{% elif data.is_warning %}text-golden-600{% else %}text-earth-600{% endif %}">
+                                {{ data.percentage }}%
+                            </span>
+                        </div>
+                        <div class="w-full h-2 bg-cream-200 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-700 ease-out {% if data.is_exceeded %}bg-warmrose-500{% elif data.is_warning %}bg-golden-500{% else %}bg-terra-500{% endif %}" style="width: {{ data.bar_percentage|default:data.percentage }}%"></div>
+                        </div>
                     </div>
                 </div>
                 {% empty %}
-                <div class="col-span-full bg-white p-16 rounded-[2rem] border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center">
-                    <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center mb-6 shadow-sm border border-slate-100">
-                        <span class="material-symbols-outlined text-slate-300 text-4xl">pie_chart</span>
+                <div class="col-span-full bg-cream-50 p-14 rounded-[2rem] border-2 border-dashed border-cream-300 flex flex-col items-center justify-center text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-cream-200 flex items-center justify-center mb-4 shadow-sm border border-cream-300">
+                        <span class="material-symbols-outlined text-cream-400 text-3xl">pie_chart</span>
                     </div>
-                    <h4 class="text-2xl font-bold text-slate-800 mb-2">No Budgets Created</h4>
-                    <p class="text-slate-500">Use the form in the sidebar to define your first spending limit.</p>
+                    <h4 class="text-xl font-bold text-earth-900 mb-1">No Budgets Created</h4>
+                    <p class="text-earth-600 text-xs">Use the form in the sidebar to define your first spending limit.</p>
                 </div>
                 {% endfor %}
             </div>

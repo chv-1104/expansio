@@ -3,40 +3,40 @@
 
 {% block content %}
 <div class="w-full max-w-md mx-auto z-10 my-auto py-6 sm:py-10">
-    <div class="glass-panel p-6 sm:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full transition-all duration-500 hover:shadow-[0_8px_30px_rgb(99,102,241,0.1)] relative overflow-hidden text-center">
-        <!-- Decorative blob -->
-        <div class="absolute -top-24 right-0 w-48 h-48 bg-rose-400/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 -left-10 w-48 h-48 bg-indigo-400/10 rounded-full blur-3xl"></div>
+    <div class="bg-cream-50/95 backdrop-blur-md p-6 sm:p-10 rounded-3xl shadow-xl shadow-earth-900/5 border border-cream-300 w-full transition-all duration-300 relative overflow-hidden text-center">
+        <!-- Decorative blobs -->
+        <div class="absolute -top-24 right-0 w-48 h-48 bg-golden-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 -left-10 w-48 h-48 bg-terra-500/10 rounded-full blur-3xl"></div>
         
-        <div class="w-20 h-20 rounded-3xl bg-white mx-auto flex items-center justify-center shadow-xl shadow-indigo-100 mb-6 border border-slate-100 transform -rotate-3 hover:rotate-0 transition-all duration-300 relative z-10">
-            <span class="material-symbols-outlined text-4xl text-indigo-600">mark_email_read</span>
+        <div class="w-16 h-16 rounded-2xl bg-cream-100 mx-auto flex items-center justify-center shadow-sm mb-4 border border-cream-300 text-terra-500 relative z-10">
+            <span class="material-symbols-outlined text-3xl">mark_email_read</span>
         </div>
         
         <div class="relative z-10">
-            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Verify Email</h2>
-            <p class="text-slate-500 font-medium mt-3 mb-8 leading-relaxed">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-earth-900 tracking-tight">Verify Email</h2>
+            <p class="text-earth-600 font-medium text-xs sm:text-sm mt-2 mb-6 leading-relaxed">
                 We sent a 6-digit secure code to your email. Enter it below to activate your account.
             </p>
         </div>
         
         {% if messages %}
             {% for message in messages %}
-            <div class="bg-rose-50 border border-rose-100 text-rose-600 px-4 py-3 rounded-xl text-sm font-semibold mb-6 text-center flex items-center justify-center gap-2 relative z-10">
-                <span class="material-symbols-outlined text-[18px]">error</span>
+            <div class="bg-warmrose-50 border border-warmrose-200 text-warmrose-600 px-4 py-2.5 rounded-xl text-xs font-semibold mb-5 text-center flex items-center justify-center gap-2 relative z-10">
+                <span class="material-symbols-outlined text-[16px]">error</span>
                 {{ message }}
             </div>
             {% endfor %}
         {% endif %}
 
-        <form method="post" class="space-y-6 relative z-10">
+        <form method="post" class="space-y-5 relative z-10">
             {% csrf_token %}
             <div>
                 {{ form.otp }}
                 {% if form.otp.errors %}
-                <p class="text-rose-500 text-xs mt-2 font-medium">{{ form.otp.errors.0 }}</p>
+                <p class="text-warmrose-500 text-xs mt-1.5 font-medium">{{ form.otp.errors.0 }}</p>
                 {% endif %}
             </div>
-            <button type="submit" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all text-sm tracking-wide">
+            <button type="submit" class="w-full bg-terra-500 text-white py-3.5 rounded-xl font-bold shadow-md shadow-terra-500/20 hover:bg-terra-600 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm tracking-wide">
                 Verify &amp; Create Account
             </button>
         </form>

@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 
 from .models import Category, Budget, EMI, Transaction
 
-INPUT_CLASS = 'w-full bg-slate-50 border border-slate-200 shadow-sm rounded-xl py-3 px-4 text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all outline-none duration-200'
+INPUT_CLASS = 'w-full bg-cream-50 border border-cream-400 shadow-sm rounded-xl py-3 px-4 text-sm text-earth-900 placeholder-cream-500 focus:bg-white focus:ring-2 focus:ring-terra-500/30 focus:border-terra-500 transition-all outline-none duration-200'
 
 
 class CategorySelect(forms.Select):
@@ -137,7 +137,7 @@ class SignupForm(forms.Form):
         return password
 
 class OTPForm(forms.Form):
-    otp = forms.RegexField(r'^\d{6}$', widget=forms.TextInput(attrs={'class': 'w-full bg-slate-50 border border-slate-200 shadow-sm rounded-xl py-4 px-4 text-center tracking-[0.5em] text-2xl font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all outline-none duration-200', 'placeholder': '------'}))
+    otp = forms.RegexField(r'^\d{6}$', widget=forms.TextInput(attrs={'class': 'w-full bg-cream-50 border border-cream-400 shadow-sm rounded-xl py-4 px-4 text-center tracking-[0.5em] text-2xl font-bold text-earth-900 focus:bg-white focus:ring-2 focus:ring-terra-500/30 focus:border-terra-500 transition-all outline-none duration-200', 'placeholder': '------'}))
 
 class LoginForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': INPUT_CLASS, 'placeholder': 'name@example.com'}))
