@@ -2,19 +2,19 @@
 {% block title %}Verify OTP{% endblock %}
 
 {% block content %}
-<div class="w-full max-w-md mx-auto z-10 my-auto py-6 sm:py-10">
-    <div class="bg-cream-50/95 backdrop-blur-md p-6 sm:p-10 rounded-3xl shadow-xl shadow-earth-900/5 border border-cream-300 w-full transition-all duration-300 relative overflow-hidden text-center">
+<div class="w-full max-w-md mx-auto z-10 my-auto py-4 sm:py-10 px-2 sm:px-0">
+    <div class="bg-cream-50/95 backdrop-blur-md p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl shadow-xl shadow-earth-900/5 border border-cream-300 w-full transition-all duration-300 relative overflow-hidden text-center">
         <!-- Decorative blobs -->
         <div class="absolute -top-24 right-0 w-48 h-48 bg-golden-500/10 rounded-full blur-3xl"></div>
         <div class="absolute bottom-0 -left-10 w-48 h-48 bg-terra-500/10 rounded-full blur-3xl"></div>
         
-        <div class="w-16 h-16 rounded-2xl bg-cream-100 mx-auto flex items-center justify-center shadow-sm mb-4 border border-cream-300 text-terra-500 relative z-10">
-            <span class="material-symbols-outlined text-3xl">mark_email_read</span>
+        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-cream-100 mx-auto flex items-center justify-center shadow-sm mb-3 sm:mb-4 border border-cream-300 text-terra-500 relative z-10">
+            <span class="material-symbols-outlined text-2xl sm:text-3xl">mark_email_read</span>
         </div>
         
         <div class="relative z-10">
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-earth-900 tracking-tight">Verify Email</h2>
-            <p class="text-earth-600 font-medium text-xs sm:text-sm mt-2 mb-6 leading-relaxed">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-earth-900 tracking-tight">Verify Email</h2>
+            <p class="text-earth-600 font-medium text-xs sm:text-sm mt-1.5 mb-5 sm:mb-6 leading-relaxed">
                 We sent a 6-digit secure code to your email. Enter it below to activate your account.
             </p>
         </div>
@@ -28,7 +28,7 @@
             {% endfor %}
         {% endif %}
 
-        <form method="post" class="space-y-5 relative z-10">
+        <form method="post" class="space-y-4 sm:space-y-5 relative z-10">
             {% csrf_token %}
             <div>
                 {{ form.otp }}
@@ -36,7 +36,7 @@
                 <p class="text-warmrose-500 text-xs mt-1.5 font-medium">{{ form.otp.errors.0 }}</p>
                 {% endif %}
             </div>
-            <button type="submit" class="w-full bg-terra-500 text-white py-3.5 rounded-xl font-bold shadow-md shadow-terra-500/20 hover:bg-terra-600 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm tracking-wide">
+            <button type="submit" class="w-full bg-terra-500 text-white py-3 sm:py-3.5 rounded-xl font-bold shadow-md shadow-terra-500/20 hover:bg-terra-600 hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm tracking-wide">
                 Verify &amp; Create Account
             </button>
         </form>

@@ -2,53 +2,53 @@
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
-<div class="p-4 md:p-8 max-w-5xl mx-auto w-full space-y-8">
+<div class="p-3.5 sm:p-6 md:p-8 max-w-5xl mx-auto w-full space-y-6 sm:space-y-8">
 
     <!-- Profile Hero Card -->
-    <div class="bg-gradient-to-br from-earth-800 via-earth-700 to-earth-900 rounded-[2.5rem] relative overflow-hidden shadow-xl shadow-earth-900/10">
+    <div class="bg-gradient-to-br from-earth-800 via-earth-700 to-earth-900 rounded-2xl sm:rounded-[2.5rem] relative overflow-hidden shadow-xl shadow-earth-900/10">
         <!-- Decorative Blobs -->
         <div class="absolute -right-20 -top-20 w-64 h-64 bg-terra-500/20 rounded-full blur-[3.5rem]"></div>
         <div class="absolute -left-16 bottom-0 w-48 h-48 bg-golden-500/15 rounded-full blur-[3rem]"></div>
         <div class="absolute right-1/3 bottom-0 w-32 h-32 bg-sage-500/10 rounded-full blur-[2rem]"></div>
 
-        <div class="relative z-10 p-8 md:p-10">
-            <div class="flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8">
+        <div class="relative z-10 p-5 sm:p-8 md:p-10">
+            <div class="flex flex-col md:flex-row items-center md:items-end gap-5 sm:gap-6 md:gap-8">
                 <!-- Avatar -->
                 <div class="relative group">
-                    <div class="w-24 h-24 md:w-28 md:h-28 rounded-[1.5rem] bg-white/10 backdrop-blur-sm p-1 shadow-xl ring-2 ring-white/20 group-hover:ring-white/40 transition-all duration-300">
-                        <div class="w-full h-full rounded-[1.25rem] bg-gradient-to-br from-terra-500 via-golden-500 to-sage-500 flex items-center justify-center overflow-hidden">
-                            <span class="text-white text-3xl md:text-4xl font-extrabold tracking-tight select-none">
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-[1.5rem] bg-white/10 backdrop-blur-sm p-1 shadow-xl ring-2 ring-white/20 group-hover:ring-white/40 transition-all duration-300">
+                        <div class="w-full h-full rounded-xl sm:rounded-[1.25rem] bg-gradient-to-br from-terra-500 via-golden-500 to-sage-500 flex items-center justify-center overflow-hidden">
+                            <span class="text-white text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight select-none">
                                 {{ user.first_name|default:user.username|make_list|first|upper }}
                             </span>
                         </div>
                     </div>
                     <!-- Online Indicator -->
-                    <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-sage-500 rounded-xl border-3 border-earth-900 shadow-md"></div>
+                    <div class="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-sage-500 rounded-lg sm:rounded-xl border-2 sm:border-3 border-earth-900 shadow-md"></div>
                 </div>
 
                 <!-- Profile Info -->
                 <div class="text-center md:text-left flex-1 mb-1">
-                    <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight">
                         {{ user.first_name|default:user.username }}
                     </h1>
-                    <p class="text-cream-300 text-xs font-medium mt-1 flex items-center gap-2 justify-center md:justify-start">
+                    <p class="text-cream-300 text-xs font-medium mt-1 flex items-center gap-1.5 sm:gap-2 justify-center md:justify-start">
                         <span class="material-symbols-outlined text-[15px] text-terra-200">mail</span>
                         {{ email|default:"No email set" }}
                     </p>
-                    <div class="flex flex-wrap items-center gap-2.5 mt-3 justify-center md:justify-start">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-2.5 mt-3 justify-center md:justify-start">
                         {% if user_profile.occupation %}
-                        <span class="bg-white/10 backdrop-blur-sm text-white/90 px-3.5 py-1 rounded-xl text-xs font-bold tracking-wide border border-white/10 flex items-center gap-1.5">
+                        <span class="bg-white/10 backdrop-blur-sm text-white/90 px-3 sm:px-3.5 py-1 rounded-xl text-xs font-bold tracking-wide border border-white/10 flex items-center gap-1.5">
                             <span class="material-symbols-outlined text-[13px] text-terra-200">work</span>
                             {{ user_profile.occupation }}
                         </span>
                         {% endif %}
                         {% if user_profile.city %}
-                        <span class="bg-white/10 backdrop-blur-sm text-white/90 px-3.5 py-1 rounded-xl text-xs font-bold tracking-wide border border-white/10 flex items-center gap-1.5">
+                        <span class="bg-white/10 backdrop-blur-sm text-white/90 px-3 sm:px-3.5 py-1 rounded-xl text-xs font-bold tracking-wide border border-white/10 flex items-center gap-1.5">
                             <span class="material-symbols-outlined text-[13px] text-sage-200">location_on</span>
                             {{ user_profile.city }}
                         </span>
                         {% endif %}
-                        <span class="bg-white/10 backdrop-blur-sm text-white/90 px-3.5 py-1 rounded-xl text-xs font-bold tracking-wide border border-white/10 flex items-center gap-1.5">
+                        <span class="bg-white/10 backdrop-blur-sm text-white/90 px-3 sm:px-3.5 py-1 rounded-xl text-xs font-bold tracking-wide border border-white/10 flex items-center gap-1.5">
                             <span class="material-symbols-outlined text-[13px] text-golden-100">calendar_month</span>
                             Joined {{ member_since|date:"M Y" }}
                         </span>
@@ -59,58 +59,58 @@
     </div>
 
     <!-- Stats Row -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-cream-50 border border-cream-300 rounded-2xl p-4 shadow-sm text-center group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-            <div class="w-9 h-9 rounded-xl bg-terra-50 text-terra-500 border border-terra-200 flex items-center justify-center mx-auto mb-2 group-hover:bg-terra-100 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">person</span>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div class="bg-cream-50 border border-cream-300 rounded-2xl p-3.5 sm:p-4 shadow-sm text-center group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-terra-50 text-terra-500 border border-terra-200 flex items-center justify-center mx-auto mb-1.5 sm:mb-2 group-hover:bg-terra-100 transition-colors">
+                <span class="material-symbols-outlined text-[16px] sm:text-[18px]">person</span>
             </div>
             <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-earth-600 mb-0.5">Name</p>
-            <p class="text-sm font-bold text-earth-900 truncate">{{ user.first_name|default:"—" }}</p>
+            <p class="text-xs sm:text-sm font-bold text-earth-900 truncate">{{ user.first_name|default:"—" }}</p>
         </div>
-        <div class="bg-cream-50 border border-cream-300 rounded-2xl p-4 shadow-sm text-center group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-            <div class="w-9 h-9 rounded-xl bg-golden-50 text-golden-600 border border-golden-100 flex items-center justify-center mx-auto mb-2 group-hover:bg-golden-100 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">cake</span>
+        <div class="bg-cream-50 border border-cream-300 rounded-2xl p-3.5 sm:p-4 shadow-sm text-center group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-golden-50 text-golden-600 border border-golden-100 flex items-center justify-center mx-auto mb-1.5 sm:mb-2 group-hover:bg-golden-100 transition-colors">
+                <span class="material-symbols-outlined text-[16px] sm:text-[18px]">cake</span>
             </div>
             <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-earth-600 mb-0.5">Age</p>
-            <p class="text-sm font-bold text-earth-900">{{ user_profile.age|default:"—" }}</p>
+            <p class="text-xs sm:text-sm font-bold text-earth-900">{{ user_profile.age|default:"—" }}</p>
         </div>
-        <div class="bg-cream-50 border border-cream-300 rounded-2xl p-4 shadow-sm text-center group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-            <div class="w-9 h-9 rounded-xl bg-sage-50 text-sage-600 border border-sage-200 flex items-center justify-center mx-auto mb-2 group-hover:bg-sage-100 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">location_on</span>
+        <div class="bg-cream-50 border border-cream-300 rounded-2xl p-3.5 sm:p-4 shadow-sm text-center group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-sage-50 text-sage-600 border border-sage-200 flex items-center justify-center mx-auto mb-1.5 sm:mb-2 group-hover:bg-sage-100 transition-colors">
+                <span class="material-symbols-outlined text-[16px] sm:text-[18px]">location_on</span>
             </div>
             <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-earth-600 mb-0.5">City</p>
-            <p class="text-sm font-bold text-earth-900 truncate">{{ user_profile.city|default:"—" }}</p>
+            <p class="text-xs sm:text-sm font-bold text-earth-900 truncate">{{ user_profile.city|default:"—" }}</p>
         </div>
-        <div class="bg-cream-50 border border-cream-300 rounded-2xl p-4 shadow-sm text-center group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-            <div class="w-9 h-9 rounded-xl bg-cream-200 text-earth-700 border border-cream-300 flex items-center justify-center mx-auto mb-2 group-hover:bg-cream-300 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">work</span>
+        <div class="bg-cream-50 border border-cream-300 rounded-2xl p-3.5 sm:p-4 shadow-sm text-center group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cream-200 text-earth-700 border border-cream-300 flex items-center justify-center mx-auto mb-1.5 sm:mb-2 group-hover:bg-cream-300 transition-colors">
+                <span class="material-symbols-outlined text-[16px] sm:text-[18px]">work</span>
             </div>
             <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-earth-600 mb-0.5">Occupation</p>
-            <p class="text-sm font-bold text-earth-900 truncate">{{ user_profile.occupation|default:"—" }}</p>
+            <p class="text-xs sm:text-sm font-bold text-earth-900 truncate">{{ user_profile.occupation|default:"—" }}</p>
         </div>
     </div>
 
     <!-- Edit Profile Section -->
-    <div class="bg-cream-50 rounded-[2rem] border border-cream-300 shadow-sm overflow-hidden">
+    <div class="bg-cream-50 rounded-2xl sm:rounded-[2rem] border border-cream-300 shadow-sm overflow-hidden">
         <!-- Section Header -->
-        <div class="px-7 pt-7 pb-4 border-b border-cream-300">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-cream-200 text-earth-700 border border-cream-300 flex items-center justify-center">
+        <div class="px-5 sm:px-7 pt-5 sm:pt-7 pb-4 border-b border-cream-300">
+            <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cream-200 text-earth-700 border border-cream-300 flex items-center justify-center shrink-0">
                     <span class="material-symbols-outlined text-[18px]">edit</span>
                 </div>
                 <div>
-                    <h2 class="text-base font-bold text-earth-900 tracking-tight">Edit Profile</h2>
+                    <h2 class="text-sm sm:text-base font-bold text-earth-900 tracking-tight">Edit Profile</h2>
                     <p class="text-xs text-cream-500 font-medium">Update your personal information below</p>
                 </div>
             </div>
         </div>
 
-        <form method="post" class="p-7">
+        <form method="post" class="p-5 sm:p-7">
             {% csrf_token %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3.5 sm:gap-y-4">
                 {% for field in form %}
                 <div class="{% if forloop.first %}md:col-span-2{% endif %}">
-                    <label class="flex items-center gap-1.5 text-[11px] font-bold text-earth-600 uppercase tracking-wider mb-1.5 ms-0.5">
+                    <label class="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-earth-600 uppercase tracking-wider mb-1.5 ms-0.5">
                         <span class="material-symbols-outlined text-[13px] text-cream-500">
                             {% if field.name == 'first_name' %}badge
                             {% elif field.name == 'age' %}cake
@@ -132,12 +132,12 @@
             </div>
 
             <!-- Actions -->
-            <div class="pt-8 flex flex-col sm:flex-row gap-3">
-                <button type="submit" class="flex-1 bg-terra-500 hover:bg-terra-600 text-white py-3.5 rounded-2xl font-bold shadow-md shadow-terra-500/20 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm tracking-wide flex items-center justify-center gap-2 group">
+            <div class="pt-6 sm:pt-8 flex flex-col sm:flex-row gap-2.5 sm:gap-3">
+                <button type="submit" class="flex-1 bg-terra-500 hover:bg-terra-600 text-white py-3.5 rounded-2xl font-bold shadow-md shadow-terra-500/20 hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 group">
                     <span class="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">save</span>
                     Save Changes
                 </button>
-                <a href="{% url 'expansio_dashboard' %}" class="flex-1 bg-cream-200 border border-cream-300 text-earth-700 py-3.5 rounded-2xl font-bold text-center hover:bg-cream-300 transition-all text-sm tracking-wide flex items-center justify-center gap-2">
+                <a href="{% url 'expansio_dashboard' %}" class="flex-1 bg-cream-200 border border-cream-300 text-earth-700 py-3.5 rounded-2xl font-bold text-center hover:bg-cream-300 transition-all text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 active:scale-[0.99]">
                     <span class="material-symbols-outlined text-[18px]">arrow_back</span>
                     Dashboard
                 </a>
@@ -146,20 +146,20 @@
     </div>
 
     <!-- Danger Zone -->
-    <div class="bg-cream-50 rounded-[2rem] border border-warmrose-200 shadow-sm overflow-hidden">
-        <div class="px-7 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-warmrose-50 text-warmrose-600 border border-warmrose-100 flex items-center justify-center shrink-0">
+    <div class="bg-cream-50 rounded-2xl sm:rounded-[2rem] border border-warmrose-200 shadow-sm overflow-hidden">
+        <div class="px-5 sm:px-7 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-warmrose-50 text-warmrose-600 border border-warmrose-100 flex items-center justify-center shrink-0">
                     <span class="material-symbols-outlined text-[18px]">shield</span>
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-earth-900">Security & Session</h3>
+                    <h3 class="text-xs sm:text-sm font-bold text-earth-900">Security &amp; Session</h3>
                     <p class="text-xs text-cream-500 font-medium">End your current session on this device</p>
                 </div>
             </div>
             <form method="post" action="{% url 'expansio_logout' %}" class="w-full sm:w-auto">
                 {% csrf_token %}
-                <button type="submit" class="w-full bg-warmrose-50 border border-warmrose-200 text-warmrose-600 px-6 py-2.5 rounded-2xl font-bold text-center hover:bg-warmrose-100 transition-all text-xs tracking-wide flex items-center justify-center gap-2 group">
+                <button type="submit" class="w-full bg-warmrose-50 border border-warmrose-200 text-warmrose-600 px-6 py-2.5 rounded-2xl font-bold text-center hover:bg-warmrose-100 transition-all text-xs tracking-wide flex items-center justify-center gap-2 group active:scale-95">
                     <span class="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">logout</span>
                     Log Out
                 </button>

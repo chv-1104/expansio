@@ -3,17 +3,17 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="w-full max-w-md mx-auto z-10 my-auto py-6 sm:py-10">
-    <div class="bg-cream-50/95 backdrop-blur-md p-6 sm:p-10 rounded-3xl shadow-xl shadow-earth-900/5 border border-cream-300 w-full transition-all duration-300 relative overflow-hidden">
+<div class="w-full max-w-md mx-auto z-10 my-auto py-4 sm:py-10 px-2 sm:px-0">
+    <div class="bg-cream-50/95 backdrop-blur-md p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl shadow-xl shadow-earth-900/5 border border-cream-300 w-full transition-all duration-300 relative overflow-hidden">
         <!-- Decorative blobs -->
         <div class="absolute -top-32 -left-20 w-64 h-64 bg-sage-500/10 rounded-full blur-3xl"></div>
         <div class="absolute -bottom-32 -right-20 w-64 h-64 bg-terra-500/10 rounded-full blur-3xl"></div>
         
-        <div class="text-center mb-6 relative z-10">
-            <div class="w-16 h-16 rounded-2xl bg-cream-100 mx-auto flex items-center justify-center shadow-sm mb-4 border border-cream-300 overflow-hidden p-1.5">
+        <div class="text-center mb-5 sm:mb-6 relative z-10">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-cream-100 mx-auto flex items-center justify-center shadow-sm mb-3 sm:mb-4 border border-cream-300 overflow-hidden p-1">
                 <img src="{% static 'img/favicon.png' %}" alt="Expansio" class="w-full h-full object-contain rounded-xl">
             </div>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-earth-900 tracking-tight">Join Expansio</h2>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-earth-900 tracking-tight">Join Expansio</h2>
             <p class="text-earth-600 font-medium text-xs sm:text-sm mt-1">Start tracking your personal finances today.</p>
         </div>
         
@@ -26,23 +26,23 @@
             {% endfor %}
         {% endif %}
 
-        <form method="post" class="space-y-3.5 relative z-10">
+        <form method="post" class="space-y-3 sm:space-y-3.5 relative z-10">
             {% csrf_token %}
             {% for field in form %}
             <div>
-                <label class="block text-[11px] font-bold text-earth-600 uppercase tracking-wider mb-1.5 ms-1">{{ field.label }}</label>
+                <label class="block text-[10px] sm:text-[11px] font-bold text-earth-600 uppercase tracking-wider mb-1.5 ms-1">{{ field.label }}</label>
                 {{ field }}
                 {% if field.errors %}
                 <p class="text-warmrose-500 text-xs mt-1 font-medium ms-1">{{ field.errors.0 }}</p>
                 {% endif %}
             </div>
             {% endfor %}
-            <button type="submit" class="w-full bg-terra-500 text-white py-3.5 rounded-xl font-bold mt-5 shadow-md shadow-terra-500/20 hover:bg-terra-600 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm tracking-wide">
+            <button type="submit" class="w-full bg-terra-500 text-white py-3 sm:py-3.5 rounded-xl font-bold mt-4 sm:mt-5 shadow-md shadow-terra-500/20 hover:bg-terra-600 hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm tracking-wide">
                 Create Account
             </button>
         </form>
         
-        <div class="mt-6 text-center text-xs font-medium text-earth-600 relative z-10">
+        <div class="mt-5 sm:mt-6 text-center text-xs font-medium text-earth-600 relative z-10">
             Already have an account? <a href="{% url 'expansio_login' %}" class="text-terra-500 font-bold hover:text-terra-600 hover:underline underline-offset-4">Log in</a>
         </div>
     </div>

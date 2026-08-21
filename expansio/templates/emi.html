@@ -2,24 +2,24 @@
 {% block title %}EMI Tracker{% endblock %}
 
 {% block content %}
-<div class="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8">
-    <div class="flex flex-col lg:flex-row gap-8">
+<div class="p-3.5 sm:p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8">
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
         <!-- Main Content Area -->
-        <div class="flex-1 space-y-6">
+        <div class="flex-1 space-y-5 sm:space-y-6">
             <!-- Header & Summary -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-1 md:mt-0">
                 <div>
                     <span class="text-xs font-bold uppercase tracking-[0.2em] text-earth-600 mb-1 block">Installments</span>
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-earth-900 tracking-tight">EMI Tracker</h1>
-                    <p class="text-earth-600 font-medium text-sm mt-1">Manage your recurring installments and debt obligations.</p>
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-earth-900 tracking-tight">EMI Tracker</h1>
+                    <p class="text-earth-600 font-medium text-xs sm:text-sm mt-1">Manage your recurring installments and debt obligations.</p>
                 </div>
                 
-                <div class="bg-cream-50 rounded-[2rem] p-5 px-6 min-w-[260px] border-l-4 border-l-terra-500 border border-cream-300 shadow-sm relative overflow-hidden group">
+                <div class="bg-cream-50 rounded-2xl sm:rounded-[2rem] p-4 sm:p-5 px-5 sm:px-6 w-full sm:w-auto min-w-0 sm:min-w-[260px] border-l-4 border-l-terra-500 border border-cream-300 shadow-sm relative overflow-hidden group">
                     <div class="relative z-10">
                         <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-earth-600 mb-1">Total Monthly Burden</p>
                         <div class="flex items-baseline gap-2">
-                            <span class="text-2xl font-extrabold text-earth-900">₹{{ monthly_burden|floatformat:2 }}</span>
-                            <span class="text-[10px] font-bold text-warmrose-600 bg-warmrose-50 border border-warmrose-200 px-2 py-0.5 rounded-full">Auto-Deducting</span>
+                            <span class="text-xl sm:text-2xl font-extrabold text-earth-900 tabular-nums">₹{{ monthly_burden|floatformat:2 }}</span>
+                            <span class="text-[9px] sm:text-[10px] font-bold text-warmrose-600 bg-warmrose-50 border border-warmrose-200 px-2 py-0.5 rounded-full whitespace-nowrap">Auto-Deducting</span>
                         </div>
                     </div>
                     <div class="absolute -right-8 -bottom-8 w-28 h-28 bg-terra-500/5 rounded-full blur-2xl"></div>
@@ -27,25 +27,25 @@
             </div>
 
             <!-- EMI List -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 {% for emi in emis %}
-                <div class="bg-cream-50 rounded-[2rem] p-6 border border-cream-300 hover:border-cream-400 transition-all duration-200 flex flex-col justify-between shadow-sm group">
+                <div class="bg-cream-50 rounded-2xl sm:rounded-[2rem] p-5 sm:p-6 border border-cream-300 hover:border-cream-400 transition-all duration-200 flex flex-col justify-between shadow-sm group">
                     <div>
                         <div class="flex justify-between items-start mb-3">
-                            <div class="w-11 h-11 rounded-2xl bg-cream-200 flex items-center justify-center text-earth-700 group-hover:bg-earth-800 group-hover:text-white transition-all duration-200 shadow-sm border border-cream-300">
-                                <span class="material-symbols-outlined text-[22px]">payments</span>
+                            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-cream-200 flex items-center justify-center text-earth-700 group-hover:bg-earth-800 group-hover:text-white transition-all duration-200 shadow-sm border border-cream-300 shrink-0">
+                                <span class="material-symbols-outlined text-[20px] sm:text-[22px]">payments</span>
                             </div>
                             <form method="post" action="{% url 'expansio_delete_emi' emi.pk %}">
                                 {% csrf_token %}
-                                <button type="submit" class="text-cream-500 hover:text-warmrose-600 hover:bg-warmrose-50 p-1.5 rounded-xl transition-colors active:scale-90" onclick="return confirm('Remove this installment?')">
+                                <button type="submit" class="text-cream-500 hover:text-warmrose-600 hover:bg-warmrose-50 p-2 rounded-xl transition-colors active:scale-90 min-w-[36px] min-h-[36px] flex items-center justify-center" onclick="return confirm('Remove this installment?')">
                                     <span class="material-symbols-outlined text-[18px]">delete</span>
                                 </button>
                             </form>
                         </div>
                         
-                        <h3 class="text-base font-bold text-earth-900 mb-1">{{ emi.description }}</h3>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-terra-500 bg-terra-50 border border-terra-200 px-2 py-0.5 rounded-lg">{{ emi.frequency }}</span>
+                        <h3 class="text-sm sm:text-base font-bold text-earth-900 mb-1 truncate">{{ emi.description }}</h3>
+                        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-3">
+                            <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-terra-500 bg-terra-50 border border-terra-200 px-2 py-0.5 rounded-lg">{{ emi.frequency }}</span>
                             <span class="text-xs text-cream-500 font-medium">Started {{ emi.start_date }}</span>
                             {% if emi.end_date %}
                             <span class="text-xs text-cream-500 font-medium">Ends {{ emi.end_date }}</span>
@@ -53,13 +53,13 @@
                         </div>
                     </div>
 
-                    <div class="pt-4 border-t border-cream-200 flex justify-between items-end">
+                    <div class="pt-3.5 sm:pt-4 border-t border-cream-200 flex justify-between items-end">
                         <div>
                             <p class="text-[10px] font-bold uppercase tracking-widest text-earth-600 mb-0.5">Installment Amount</p>
-                            <p class="text-xl font-extrabold text-earth-900">₹{{ emi.amount|floatformat:2 }}</p>
+                            <p class="text-lg sm:text-xl font-extrabold text-earth-900 tabular-nums">₹{{ emi.amount|floatformat:2 }}</p>
                         </div>
                         {% if emi.active %}
-                        <div class="flex items-center gap-1.5 text-sage-600 font-bold text-xs uppercase tracking-tighter">
+                        <div class="flex items-center gap-1 text-sage-600 font-bold text-xs uppercase tracking-tighter">
                             <span class="w-1.5 h-1.5 rounded-full bg-sage-500 animate-pulse"></span>
                             Active
                         </div>
@@ -67,9 +67,9 @@
                     </div>
                 </div>
                 {% empty %}
-                <div class="col-span-full py-16 bg-cream-50 rounded-[2rem] border-dashed border-2 border-cream-300 flex flex-col items-center justify-center text-earth-600">
-                    <span class="material-symbols-outlined text-4xl mb-3 opacity-40 text-cream-400">event_repeat</span>
-                    <p class="font-bold text-base text-earth-900 mb-0.5">No EMIs tracked</p>
+                <div class="col-span-full py-12 sm:py-16 bg-cream-50 rounded-2xl sm:rounded-[2rem] border-dashed border-2 border-cream-300 flex flex-col items-center justify-center text-earth-600 text-center px-4">
+                    <span class="material-symbols-outlined text-3xl sm:text-4xl mb-3 opacity-40 text-cream-400">event_repeat</span>
+                    <p class="font-bold text-sm sm:text-base text-earth-900 mb-0.5">No EMIs tracked</p>
                     <p class="text-xs">Use the setup panel to add your first installment.</p>
                 </div>
                 {% endfor %}
@@ -78,15 +78,15 @@
 
         <!-- Sidebar Setup -->
         <div class="lg:w-96 space-y-6">
-            <div class="bg-cream-50 rounded-[2rem] p-7 border border-cream-300 shadow-sm sticky top-6">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 rounded-xl bg-terra-50 text-terra-500 border border-terra-200 flex items-center justify-center shadow-sm">
-                        <span class="material-symbols-outlined text-[20px]">add_card</span>
+            <div class="bg-cream-50 rounded-2xl sm:rounded-[2rem] p-5 sm:p-7 border border-cream-300 shadow-sm sticky top-6">
+                <div class="flex items-center gap-2.5 sm:gap-3 mb-5 sm:mb-6">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-terra-50 text-terra-500 border border-terra-200 flex items-center justify-center shadow-sm shrink-0">
+                        <span class="material-symbols-outlined text-[18px] sm:text-[20px]">add_card</span>
                     </div>
-                    <h2 class="text-lg font-bold text-earth-900">New Installment</h2>
+                    <h2 class="text-base sm:text-lg font-bold text-earth-900">New Installment</h2>
                 </div>
                 
-                <form method="post" class="space-y-4">
+                <form method="post" class="space-y-3.5 sm:space-y-4">
                     {% csrf_token %}
                     <div class="space-y-1">
                         <label for="{{ form.description.id_for_label }}" class="text-[10px] font-bold uppercase tracking-wider text-earth-600 ml-1">Label / Description</label>
@@ -94,7 +94,7 @@
                         {% if form.description.errors %}<p class="text-warmrose-500 text-xs font-medium">{{ form.description.errors.0 }}</p>{% endif %}
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="space-y-1">
                             <label for="{{ form.amount.id_for_label }}" class="text-[10px] font-bold uppercase tracking-wider text-earth-600 ml-1">Amount</label>
                             {{ form.amount }}
@@ -107,7 +107,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="space-y-1">
                             <label for="{{ form.start_date.id_for_label }}" class="text-[10px] font-bold uppercase tracking-wider text-earth-600 ml-1">Start Date</label>
                             {{ form.start_date }}
@@ -121,16 +121,16 @@
                     </div>
 
                     <button type="submit" 
-                        class="w-full bg-terra-500 hover:bg-terra-600 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-terra-500/20 transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 mt-3 text-sm">
+                        class="w-full bg-terra-500 hover:bg-terra-600 text-white font-bold py-3.5 rounded-2xl shadow-md shadow-terra-500/20 transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 mt-3 text-xs sm:text-sm">
                         <span class="material-symbols-outlined text-[18px]">save</span>
                         Activate EMI
                     </button>
                 </form>
                 
-                <div class="mt-6 p-4 bg-golden-50 rounded-2xl border border-golden-100">
-                    <div class="flex items-center gap-2 text-golden-600 mb-1">
+                <div class="mt-5 sm:mt-6 p-3.5 sm:p-4 bg-golden-50 rounded-2xl border border-golden-100">
+                    <div class="flex items-center gap-1.5 text-golden-600 mb-1">
                         <span class="material-symbols-outlined text-[18px]">info</span>
-                        <span class="text-[11px] font-bold uppercase tracking-wider">How it works</span>
+                        <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">How it works</span>
                     </div>
                     <p class="text-xs text-earth-700 leading-relaxed font-medium">Activated EMIs will automatically be subtracted from your displayed "Total Income" each month to reflect your actual disposable balance.</p>
                 </div>

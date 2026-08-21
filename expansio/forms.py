@@ -137,7 +137,7 @@ class SignupForm(forms.Form):
         return password
 
 class OTPForm(forms.Form):
-    otp = forms.RegexField(r'^\d{6}$', widget=forms.TextInput(attrs={'class': 'w-full bg-cream-50 border border-cream-400 shadow-sm rounded-xl py-4 px-4 text-center tracking-[0.5em] text-2xl font-bold text-earth-900 focus:bg-white focus:ring-2 focus:ring-terra-500/30 focus:border-terra-500 transition-all outline-none duration-200', 'placeholder': '------'}))
+    otp = forms.RegexField(r'^\d{6}$', widget=forms.TextInput(attrs={'class': 'w-full bg-cream-50 border border-cream-400 shadow-sm rounded-xl py-3.5 sm:py-4 px-3 sm:px-4 text-center tracking-[0.25em] sm:tracking-[0.45em] text-xl sm:text-2xl font-bold text-earth-900 focus:bg-white focus:ring-2 focus:ring-terra-500/30 focus:border-terra-500 transition-all outline-none duration-200', 'placeholder': '------'}))
 
 class LoginForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': INPUT_CLASS, 'placeholder': 'name@example.com'}))

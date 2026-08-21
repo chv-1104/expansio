@@ -3,27 +3,27 @@
 {% block title %}Expansio — Personal Finance Tracker{% endblock %}
 
 {% block content %}
-<div class="w-full min-h-screen text-earth-600 relative">
+<div class="w-full min-h-screen text-earth-600 relative overflow-x-hidden">
 
     <!-- Minimal top bar -->
     <header class="w-full sticky top-0 z-50 bg-cream-100/90 backdrop-blur-lg border-b border-cream-300">
-        <div class="max-w-5xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+        <div class="max-w-5xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
             <a href="{% url 'expansio_home' %}" class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-cream-50 flex items-center justify-center shadow-sm border border-cream-300 overflow-hidden p-0.5">
+                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cream-50 flex items-center justify-center shadow-sm border border-cream-300 overflow-hidden p-0.5">
                     <img src="{% static 'img/favicon.png' %}" alt="Expansio" class="w-full h-full object-contain rounded-lg">
                 </div>
-                <span class="font-bold text-lg text-earth-900 tracking-tight">Expansio</span>
+                <span class="font-bold text-base sm:text-lg text-earth-900 tracking-tight">Expansio</span>
             </a>
             <div class="flex items-center gap-2">
                 {% if user.is_authenticated %}
-                <a href="{% url 'expansio_dashboard' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm">
+                <a href="{% url 'expansio_dashboard' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors shadow-sm">
                     Dashboard →
                 </a>
                 {% else %}
-                <a href="{% url 'expansio_login' %}" class="text-sm font-semibold text-earth-600 hover:text-earth-900 px-3 py-2 transition-colors">
+                <a href="{% url 'expansio_login' %}" class="text-xs sm:text-sm font-semibold text-earth-600 hover:text-earth-900 px-2.5 sm:px-3 py-2 transition-colors">
                     Log in
                 </a>
-                <a href="{% url 'expansio_signup' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm">
+                <a href="{% url 'expansio_signup' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors shadow-sm">
                     Sign up
                 </a>
                 {% endif %}
@@ -31,47 +31,47 @@
         </div>
     </header>
 
-    <div class="max-w-5xl mx-auto px-5 sm:px-8">
+    <div class="max-w-5xl mx-auto px-4 sm:px-8">
 
-        <!-- Hero: left-aligned, direct, no fluff -->
-        <section class="pt-16 sm:pt-24 pb-16 sm:pb-20 max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cream-200 border border-cream-300 text-xs font-bold uppercase tracking-wider text-earth-700 mb-6">
+        <!-- Hero -->
+        <section class="pt-12 sm:pt-20 pb-12 sm:pb-16 max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cream-200 border border-cream-300 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-earth-700 mb-5">
                 <span class="w-1.5 h-1.5 rounded-full bg-terra-500"></span>
                 Personal Finance Platform
             </div>
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-earth-900 tracking-tight leading-[1.15]">
-                Mindful finance tracking,<br>built with precision.
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-earth-900 tracking-tight leading-[1.18]">
+                Mindful finance tracking,<br class="hidden sm:inline"> built with precision.
             </h1>
-            <p class="mt-5 text-base sm:text-lg text-earth-600 leading-relaxed">
+            <p class="mt-4 sm:mt-5 text-sm sm:text-base md:text-lg text-earth-600 leading-relaxed">
                 Expansio is a full-stack personal finance manager built with Django. Track income, expenses, category spending limits, and recurring EMI debt obligations with dependable data integrity under the hood.
             </p>
 
-            <div class="flex flex-wrap items-center gap-3 mt-8">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-6 sm:mt-8">
                 {% if user.is_authenticated %}
-                <a href="{% url 'expansio_dashboard' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-6 py-3 rounded-2xl text-sm font-bold transition-all shadow-md shadow-terra-500/20">
+                <a href="{% url 'expansio_dashboard' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-6 py-3.5 rounded-2xl text-sm font-bold text-center transition-all shadow-md shadow-terra-500/20 active:scale-95">
                     Open dashboard →
                 </a>
                 {% else %}
-                <a href="{% url 'expansio_signup' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-6 py-3 rounded-2xl text-sm font-bold transition-all shadow-md shadow-terra-500/20">
+                <a href="{% url 'expansio_signup' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-6 py-3.5 rounded-2xl text-sm font-bold text-center transition-all shadow-md shadow-terra-500/20 active:scale-95">
                     Try it out →
                 </a>
-                <button onclick="document.getElementById('demoCreds').classList.toggle('hidden')" class="text-sm font-semibold text-earth-600 hover:text-earth-900 px-4 py-3 rounded-2xl hover:bg-cream-200 transition-all">
+                <button onclick="document.getElementById('demoCreds').classList.toggle('hidden')" class="text-sm font-semibold text-earth-600 hover:text-earth-900 px-4 py-3 rounded-2xl hover:bg-cream-200 transition-all text-center">
                     or use demo login
                 </button>
                 {% endif %}
             </div>
 
-            <!-- Demo creds: inline, subtle -->
-            <div id="demoCreds" class="hidden mt-4 bg-cream-50 border border-cream-300 rounded-2xl p-4 max-w-sm shadow-sm">
+            <!-- Demo creds -->
+            <div id="demoCreds" class="hidden mt-4 bg-cream-50 border border-cream-300 rounded-2xl p-4 w-full max-w-sm shadow-sm">
                 <div class="text-xs text-earth-600 font-bold uppercase tracking-wider mb-2">Demo credentials</div>
-                <div class="font-mono text-sm text-earth-900 space-y-1">
+                <div class="font-mono text-xs sm:text-sm text-earth-900 space-y-1.5">
                     <div class="flex items-center justify-between">
-                        <span>demo@example.com</span>
-                        <button onclick="copyText('demo@example.com', this)" class="text-xs text-terra-500 hover:text-terra-600 font-sans font-semibold">copy</button>
+                        <span class="truncate mr-2">demo@example.com</span>
+                        <button onclick="copyText('demo@example.com', this)" class="text-xs text-terra-500 hover:text-terra-600 font-sans font-semibold shrink-0">copy</button>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span>DemoPassword123!</span>
-                        <button onclick="copyText('DemoPassword123!', this)" class="text-xs text-terra-500 hover:text-terra-600 font-sans font-semibold">copy</button>
+                        <span class="truncate mr-2">DemoPassword123!</span>
+                        <button onclick="copyText('DemoPassword123!', this)" class="text-xs text-terra-500 hover:text-terra-600 font-sans font-semibold shrink-0">copy</button>
                     </div>
                 </div>
                 <a href="{% url 'expansio_login' %}" class="block mt-3 text-xs font-bold text-terra-500 hover:text-terra-600">Go to login →</a>
@@ -79,16 +79,16 @@
         </section>
 
         <!-- Interactive sandbox -->
-        <section id="sandbox" class="pb-20">
-            <div class="mb-6">
-                <h2 class="text-xl font-bold text-earth-900">Try the calculation engine</h2>
-                <p class="text-sm text-earth-600 mt-1">Runs the exact Decimal arithmetic the backend uses. Adjust the numbers below.</p>
+        <section id="sandbox" class="pb-16 sm:pb-20">
+            <div class="mb-5 sm:mb-6">
+                <h2 class="text-lg sm:text-xl font-bold text-earth-900">Try the calculation engine</h2>
+                <p class="text-xs sm:text-sm text-earth-600 mt-1">Runs the exact Decimal arithmetic the backend uses. Adjust the numbers below.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-[2rem] overflow-hidden border border-cream-300 shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-2xl sm:rounded-[2rem] overflow-hidden border border-cream-300 shadow-sm">
 
                 <!-- Left: inputs -->
-                <div class="bg-cream-50 p-6 sm:p-8 space-y-5">
+                <div class="bg-cream-50 p-5 sm:p-8 space-y-4 sm:space-y-5">
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-earth-600 mb-1.5">Monthly income</label>
                         <div class="relative">
@@ -103,12 +103,12 @@
                             <input id="expenseInput" type="number" value="28000" step="500" oninput="recalc()" class="w-full bg-cream-100 border border-cream-300 rounded-xl pl-8 pr-3 py-2.5 text-sm font-semibold text-earth-900 focus:bg-white focus:ring-2 focus:ring-terra-500/30 focus:border-terra-500 outline-none transition-all">
                         </div>
                     </div>
-                    <div class="flex items-center justify-between bg-cream-100 border border-cream-300 rounded-xl p-3.5">
-                        <div>
+                    <div class="flex items-center justify-between bg-cream-100 border border-cream-300 rounded-xl p-3 sm:p-3.5">
+                        <div class="pr-2">
                             <div class="text-xs font-bold text-earth-900">Car loan EMI</div>
                             <div class="text-[11px] text-earth-600">₹8,500/month recurring</div>
                         </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
                             <input id="emiToggle" type="checkbox" checked onchange="recalc()" class="sr-only peer">
                             <div class="w-10 h-5.5 bg-cream-300 rounded-full peer peer-checked:bg-terra-500 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4.5 after:w-4.5 after:transition-all after:shadow-sm"></div>
                         </label>
@@ -116,7 +116,7 @@
                 </div>
 
                 <!-- Right: output (warm dark panel) -->
-                <div class="bg-gradient-to-br from-earth-800 to-earth-900 text-white p-6 sm:p-8 flex flex-col justify-between">
+                <div class="bg-gradient-to-br from-earth-800 to-earth-900 text-white p-5 sm:p-8 flex flex-col justify-between">
                     <div>
                         <div class="text-[10px] font-bold text-cream-300 uppercase tracking-widest mb-4 flex items-center justify-between">
                             <span>Engine output</span>
@@ -125,11 +125,11 @@
                         <div class="space-y-4">
                             <div>
                                 <div class="text-xs text-cream-300 font-medium">Net disposable income</div>
-                                <div id="calcNet" class="text-3xl font-extrabold text-white mt-0.5 tracking-tight">₹38,500.00</div>
+                                <div id="calcNet" class="text-2xl sm:text-3xl font-extrabold text-white mt-0.5 tracking-tight tabular-nums">₹38,500.00</div>
                             </div>
                             <div>
                                 <div class="text-xs text-cream-300 font-medium">Savings rate</div>
-                                <div id="calcRate" class="text-3xl font-extrabold text-sage-200 mt-0.5 tracking-tight">57.9%</div>
+                                <div id="calcRate" class="text-2xl sm:text-3xl font-extrabold text-sage-200 mt-0.5 tracking-tight tabular-nums">57.9%</div>
                             </div>
                         </div>
                     </div>
@@ -147,8 +147,8 @@
         </section>
 
         <!-- What I focused on: compact cards -->
-        <section id="focus" class="pb-20">
-            <h2 class="text-xl font-bold text-earth-900 mb-6">Key Engineering Highlights</h2>
+        <section id="focus" class="pb-16 sm:pb-20">
+            <h2 class="text-lg sm:text-xl font-bold text-earth-900 mb-5 sm:mb-6">Key Engineering Highlights</h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="bg-cream-50 border border-cream-300 rounded-2xl p-5 hover:border-cream-400 transition-colors shadow-sm">
@@ -191,26 +191,26 @@
         </section>
 
         <!-- Code viewer -->
-        <section id="code" class="pb-20">
-            <h2 class="text-xl font-bold text-earth-900 mb-6">Under the hood</h2>
+        <section id="code" class="pb-16 sm:pb-20">
+            <h2 class="text-lg sm:text-xl font-bold text-earth-900 mb-5 sm:mb-6">Under the hood</h2>
 
             <div class="bg-earth-900 rounded-2xl overflow-hidden border border-earth-700 shadow-xl max-w-3xl">
                 <!-- Window chrome -->
-                <div class="flex items-center justify-between px-4 py-3 bg-earth-800 border-b border-earth-700">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 bg-earth-800 border-b border-earth-700 gap-2">
                     <div class="flex items-center gap-1.5">
                         <div class="w-3 h-3 rounded-full bg-warmrose-500/80"></div>
                         <div class="w-3 h-3 rounded-full bg-golden-500/80"></div>
                         <div class="w-3 h-3 rounded-full bg-sage-500/80"></div>
                     </div>
-                    <div class="flex items-center gap-1">
-                        <button onclick="showCode('emiCode',this)" class="code-tab text-xs font-semibold px-3 py-1 rounded-lg transition-colors bg-earth-900 text-white">emi_engine.py</button>
-                        <button onclick="showCode('atomicCode',this)" class="code-tab text-xs font-semibold px-3 py-1 rounded-lg transition-colors text-cream-400 hover:text-white">signup_flow.py</button>
-                        <button onclick="showCode('modelCode',this)" class="code-tab text-xs font-semibold px-3 py-1 rounded-lg transition-colors text-cream-400 hover:text-white">models.py</button>
+                    <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
+                        <button onclick="showCode('emiCode',this)" class="code-tab text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1 rounded-lg transition-colors bg-earth-900 text-white shrink-0">emi_engine.py</button>
+                        <button onclick="showCode('atomicCode',this)" class="code-tab text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1 rounded-lg transition-colors text-cream-400 hover:text-white shrink-0">signup_flow.py</button>
+                        <button onclick="showCode('modelCode',this)" class="code-tab text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1 rounded-lg transition-colors text-cream-400 hover:text-white shrink-0">models.py</button>
                     </div>
                 </div>
 
                 <!-- Code panels -->
-                <div id="emiCode" class="code-panel p-5 font-mono text-xs leading-6 text-cream-200 overflow-x-auto">
+                <div id="emiCode" class="code-panel p-4 sm:p-5 font-mono text-xs leading-6 text-cream-200 overflow-x-auto">
 <pre><span class="text-earth-600">1  </span><span class="text-terra-200">def</span> <span class="text-sage-200">get_all_time_emi_burden</span>(user, target_date=<span class="text-golden-500">None</span>):
 <span class="text-earth-600">2  </span>    target_date = target_date <span class="text-terra-200">or</span> timezone.localdate()
 <span class="text-earth-600">3  </span>    emis = EMI.objects.filter(
@@ -230,7 +230,7 @@
 <span class="text-earth-600">17 </span>    <span class="text-terra-200">return</span> total</pre>
                 </div>
 
-                <div id="atomicCode" class="code-panel hidden p-5 font-mono text-xs leading-6 text-cream-200 overflow-x-auto">
+                <div id="atomicCode" class="code-panel hidden p-4 sm:p-5 font-mono text-xs leading-6 text-cream-200 overflow-x-auto">
 <pre><span class="text-earth-600">1  </span><span class="text-terra-200">with</span> transaction.atomic():
 <span class="text-earth-600">2  </span>    user = User.objects.create_user(
 <span class="text-earth-600">3  </span>        username=data[<span class="text-golden-500">'email'</span>],
@@ -250,7 +250,7 @@
 <span class="text-earth-600">17 </span>    )</pre>
                 </div>
 
-                <div id="modelCode" class="code-panel hidden p-5 font-mono text-xs leading-6 text-cream-200 overflow-x-auto">
+                <div id="modelCode" class="code-panel hidden p-4 sm:p-5 font-mono text-xs leading-6 text-cream-200 overflow-x-auto">
 <pre><span class="text-earth-600">1  </span><span class="text-terra-200">class</span> <span class="text-sage-200">Category</span>(models.Model):
 <span class="text-earth-600">2  </span>    user = models.ForeignKey(User, on_delete=models.CASCADE)
 <span class="text-earth-600">3  </span>    name = models.CharField(max_length=<span class="text-golden-500">100</span>)
@@ -271,32 +271,32 @@
         </section>
 
         <!-- Stack -->
-        <section class="pb-20">
-            <h2 class="text-xl font-bold text-earth-900 mb-4">Built with</h2>
+        <section class="pb-16 sm:pb-20">
+            <h2 class="text-lg sm:text-xl font-bold text-earth-900 mb-4">Built with</h2>
             <div class="flex flex-wrap gap-2">
-                <span class="bg-cream-50 border border-cream-300 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">Python 3.12</span>
-                <span class="bg-cream-50 border border-cream-300 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">Django 5</span>
-                <span class="bg-cream-50 border border-cream-300 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">SQLite</span>
-                <span class="bg-cream-50 border border-cream-300 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">WSGI</span>
-                <span class="bg-cream-50 border border-cream-300 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">WhiteNoise</span>
-                <span class="bg-cream-50 border border-cream-300 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">PythonAnywhere</span>
-                <span class="bg-cream-50 border border-cream-300 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">Tailwind CSS</span>
+                <span class="bg-cream-50 border border-cream-300 px-3 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">Python 3.12</span>
+                <span class="bg-cream-50 border border-cream-300 px-3 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">Django 5</span>
+                <span class="bg-cream-50 border border-cream-300 px-3 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">SQLite</span>
+                <span class="bg-cream-50 border border-cream-300 px-3 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">WSGI</span>
+                <span class="bg-cream-50 border border-cream-300 px-3 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">WhiteNoise</span>
+                <span class="bg-cream-50 border border-cream-300 px-3 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">PythonAnywhere</span>
+                <span class="bg-cream-50 border border-cream-300 px-3 py-1.5 rounded-xl text-xs font-semibold text-earth-800 shadow-sm">Tailwind CSS</span>
             </div>
         </section>
 
         <!-- Bottom CTA -->
-        <section class="pb-16 border-t border-cream-300 pt-12">
+        <section class="pb-12 sm:pb-16 border-t border-cream-300 pt-10 sm:pt-12">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-xl font-bold text-earth-900">Want to see it in action?</h2>
-                    <p class="text-sm text-earth-600 mt-0.5">Sign up or use the demo credentials to explore every feature.</p>
+                <div class="text-center sm:text-left">
+                    <h2 class="text-lg sm:text-xl font-bold text-earth-900">Want to see it in action?</h2>
+                    <p class="text-xs sm:text-sm text-earth-600 mt-0.5">Sign up or use the demo credentials to explore every feature.</p>
                 </div>
                 {% if user.is_authenticated %}
-                <a href="{% url 'expansio_dashboard' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-6 py-3 rounded-2xl text-sm font-bold transition-all shadow-md shadow-terra-500/20 whitespace-nowrap">
+                <a href="{% url 'expansio_dashboard' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-6 py-3 rounded-2xl text-sm font-bold text-center transition-all shadow-md shadow-terra-500/20 whitespace-nowrap active:scale-95">
                     Open dashboard →
                 </a>
                 {% else %}
-                <a href="{% url 'expansio_signup' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-6 py-3 rounded-2xl text-sm font-bold transition-all shadow-md shadow-terra-500/20 whitespace-nowrap">
+                <a href="{% url 'expansio_signup' %}" class="bg-terra-500 hover:bg-terra-600 text-white px-6 py-3 rounded-2xl text-sm font-bold text-center transition-all shadow-md shadow-terra-500/20 whitespace-nowrap active:scale-95">
                     Create an account →
                 </a>
                 {% endif %}
@@ -306,8 +306,8 @@
     </div>
 
     <!-- Footer -->
-    <footer class="border-t border-cream-300 py-6 text-center text-xs text-earth-600">
-        <div class="max-w-5xl mx-auto px-5 sm:px-8 flex items-center justify-between">
+    <footer class="border-t border-cream-300 py-6 text-xs text-earth-600">
+        <div class="max-w-5xl mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
             <span class="font-bold text-earth-900">Expansio</span>
             <span>Personal Finance Platform</span>
         </div>

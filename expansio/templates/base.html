@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
     <meta name="description" content="{% block meta_description %}Expansio — a full-stack personal finance tracker built with Django. Track income, expenses, budgets, and EMI loans.{% endblock %}">
     <title>Expansio | {% block title %}Dashboard{% endblock %}</title>
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
@@ -17,8 +17,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <style>
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
         }
 
         .material-symbols-outlined {
@@ -42,6 +48,11 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: #b8a896;
+        }
+
+        /* Safe area bottom padding for mobile */
+        .pb-safe {
+            padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));
         }
 
         /* Interactive element transitions */
@@ -69,7 +80,7 @@
                 background-position: 100% 50%;
             }
 
-            100% {
+            70% {
                 background-position: 0% 50%;
             }
         }
@@ -132,14 +143,14 @@
 </head>
 
 <body
-    class="bg-cream-100 text-earth-600 min-h-screen flex flex-col md:flex-row {% if not user.is_authenticated or request.resolver_match.url_name == 'expansio_home' %}gradient-bg{% endif %}">
+    class="bg-cream-100 text-earth-600 min-h-screen w-full overflow-x-hidden flex flex-col md:flex-row {% if not user.is_authenticated or request.resolver_match.url_name == 'expansio_home' %}gradient-bg{% endif %}">
 
     {% if user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}
     {% include 'components/sidebar.html' %}
     {% endif %}
 
     <main
-        class="flex-1 min-h-screen relative w-full {% if user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}pb-24 md:pb-0{% endif %} {% if not user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 max-w-7xl mx-auto{% endif %}">
+        class="flex-1 min-h-screen relative w-full overflow-x-hidden {% if user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}pb-28 md:pb-8{% endif %} {% if not user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 max-w-7xl mx-auto{% endif %}">
         {% if user.is_authenticated and request.resolver_match.url_name != 'expansio_home' %}
         {% include 'components/navbar.html' %}
         {% endif %}

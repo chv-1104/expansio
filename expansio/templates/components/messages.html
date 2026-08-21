@@ -1,8 +1,8 @@
 {% if messages %}
-<div class="fixed top-6 right-6 z-[200] flex flex-col items-end gap-3 pointer-events-none" id="notification-container">
+<div class="fixed top-4 sm:top-6 left-4 right-4 sm:left-auto sm:right-6 z-[200] flex flex-col items-center sm:items-end gap-2.5 sm:gap-3 pointer-events-none" id="notification-container">
     {% for message in messages %}
-    <div class="notification-toast pointer-events-auto min-w-[300px] max-w-md group transition-all duration-500 animate-slide-in-right relative translate-x-0 opacity-100" data-type="{{ message.tags }}">
-        <div class="overflow-hidden rounded-2xl shadow-xl shadow-earth-900/5 border border-cream-300 flex items-stretch bg-cream-50">
+    <div class="notification-toast pointer-events-auto w-full sm:w-auto min-w-0 sm:min-w-[320px] max-w-md group transition-all duration-500 animate-slide-in-right relative translate-x-0 opacity-100" data-type="{{ message.tags }}">
+        <div class="overflow-hidden rounded-2xl shadow-xl shadow-earth-900/10 border border-cream-300 flex items-stretch bg-cream-50">
             <!-- Alert Accent Bar -->
             {% if message.tags == 'success' %}
             <div class="w-1.5 bg-sage-500 shrink-0"></div>
@@ -12,23 +12,23 @@
             <div class="w-1.5 bg-terra-500 shrink-0"></div>
             {% endif %}
 
-            <div class="p-4 flex items-center gap-3.5 w-full">
-                <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 
+            <div class="p-3.5 sm:p-4 flex items-center gap-3 sm:gap-3.5 w-full">
+                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 
                     {% if message.tags == 'success' %}bg-sage-50 text-sage-600 border border-sage-200{% elif message.tags == 'error' %}bg-warmrose-50 text-warmrose-600 border border-warmrose-200{% else %}bg-terra-50 text-terra-600 border border-terra-200{% endif %}">
-                    <span class="material-symbols-outlined text-[20px]">
+                    <span class="material-symbols-outlined text-[18px] sm:text-[20px]">
                         {% if message.tags == 'success' %}check_circle{% elif message.tags == 'error' %}error{% else %}info{% endif %}
                     </span>
                 </div>
                 
-                <div class="flex-1 pr-2">
-                    <h5 class="text-[10px] font-bold uppercase tracking-[0.18em] opacity-60 mb-0.5
+                <div class="flex-1 min-w-0 pr-1 sm:pr-2">
+                    <h5 class="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em] opacity-60 mb-0.5
                         {% if message.tags == 'success' %}text-sage-600{% elif message.tags == 'error' %}text-warmrose-600{% else %}text-terra-600{% endif %}">
                         {% if message.tags == 'success' %}Success{% elif message.tags == 'error' %}System Alert{% else %}Information{% endif %}
                     </h5>
-                    <p class="text-[13px] font-semibold text-earth-900 leading-snug">{{ message }}</p>
+                    <p class="text-xs sm:text-[13px] font-semibold text-earth-900 leading-snug break-words">{{ message }}</p>
                 </div>
 
-                <button type="button" onclick="this.closest('.notification-toast').remove()" class="text-cream-500 hover:text-earth-700 transition-colors p-1">
+                <button type="button" onclick="this.closest('.notification-toast').remove()" class="text-cream-500 hover:text-earth-700 transition-colors p-1.5 shrink-0 rounded-lg" title="Dismiss">
                     <span class="material-symbols-outlined text-[18px]">close</span>
                 </button>
             </div>

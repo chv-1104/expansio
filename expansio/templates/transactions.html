@@ -2,14 +2,14 @@
 {% block title %}Transactions{% endblock %}
 
 {% block content %}
-<div class="px-4 md:px-8 py-8 max-w-7xl mx-auto w-full space-y-8">
+<div class="px-3.5 sm:px-6 md:px-8 py-6 sm:py-8 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8">
     <!-- Header Section -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
             <span class="text-xs font-bold uppercase tracking-[0.2em] text-earth-600 mb-1 block">Ledger</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-earth-900 tracking-tight">Ledger Entries</h2>
-            <div class="flex items-center gap-3 mt-2">
-                <p class="text-earth-600 font-medium text-sm">Viewing: <span class="text-earth-900 font-bold">{{ period_name }}</span></p>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-earth-900 tracking-tight">Ledger Entries</h2>
+            <div class="flex items-center gap-2 sm:gap-3 mt-1.5 sm:mt-2">
+                <p class="text-earth-600 font-medium text-xs sm:text-sm">Viewing: <span class="text-earth-900 font-bold">{{ period_name }}</span></p>
                 {% if period_name != "All Time" %}
                 <a href="{% url 'expansio_transactions' %}" class="text-[10px] font-bold text-terra-500 uppercase tracking-widest hover:underline">Show All Time</a>
                 {% endif %}
@@ -18,101 +18,106 @@
     </div>
     
     <!-- Add Transaction Form -->
-    <section class="bg-cream-50 rounded-[2rem] p-6 md:p-8 shadow-sm border border-cream-300 relative overflow-hidden group">
-        <h3 class="text-lg font-bold text-earth-900 mb-5 flex items-center gap-2 relative z-10">
+    <section class="bg-cream-50 rounded-2xl sm:rounded-[2rem] p-5 sm:p-7 md:p-8 shadow-sm border border-cream-300 relative overflow-hidden group">
+        <h3 class="text-base sm:text-lg font-bold text-earth-900 mb-4 sm:mb-5 flex items-center gap-2 relative z-10">
             <span class="material-symbols-outlined text-terra-500">add_circle</span> Add New Entry
         </h3>
         
         <!-- Transaction Type Tabs -->
-        <p class="text-[10px] font-bold text-earth-600 uppercase tracking-widest mb-2.5 ms-1 relative z-10">Select Type</p>
-        <div class="flex gap-3 mb-2 relative z-10 w-full max-w-md">
-            <button type="button" id="tab-expense" onclick="setTransactionType('Expense')" class="flex-1 py-3 px-5 rounded-2xl font-bold border-2 transition-all flex items-center justify-center gap-2 border-cream-300 bg-cream-100 text-earth-600 hover:bg-cream-200 text-sm">
-                <span class="material-symbols-outlined text-lg">trending_down</span> Expense
+        <p class="text-[10px] font-bold text-earth-600 uppercase tracking-widest mb-2 ms-1 relative z-10">Select Type</p>
+        <div class="flex gap-2.5 sm:gap-3 mb-2 relative z-10 w-full max-w-md">
+            <button type="button" id="tab-expense" onclick="setTransactionType('Expense')" class="flex-1 py-2.5 sm:py-3 px-3 sm:px-5 rounded-2xl font-bold border-2 transition-all flex items-center justify-center gap-1.5 sm:gap-2 border-cream-300 bg-cream-100 text-earth-600 hover:bg-cream-200 text-xs sm:text-sm">
+                <span class="material-symbols-outlined text-[18px] sm:text-lg">trending_down</span> Expense
             </button>
-            <button type="button" id="tab-income" onclick="setTransactionType('Income')" class="flex-1 py-3 px-5 rounded-2xl font-bold border-2 transition-all flex items-center justify-center gap-2 border-cream-300 bg-cream-100 text-earth-600 hover:bg-cream-200 text-sm">
-                <span class="material-symbols-outlined text-lg">trending_up</span> Income
+            <button type="button" id="tab-income" onclick="setTransactionType('Income')" class="flex-1 py-2.5 sm:py-3 px-3 sm:px-5 rounded-2xl font-bold border-2 transition-all flex items-center justify-center gap-1.5 sm:gap-2 border-cream-300 bg-cream-100 text-earth-600 hover:bg-cream-200 text-xs sm:text-sm">
+                <span class="material-symbols-outlined text-[18px] sm:text-lg">trending_up</span> Income
             </button>
         </div>
-        <p class="text-[11px] text-cream-500 font-medium mb-5 ms-1 relative z-10">Expenses are money you spend; Income is money you earn.</p>
+        <p class="text-[11px] text-cream-500 font-medium mb-4 sm:mb-5 ms-1 relative z-10">Expenses are money you spend; Income is money you earn.</p>
 
-        <form method="post" class="flex flex-wrap items-end gap-4 relative z-10" id="tx-form">
+        <form method="post" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 items-end relative z-10" id="tx-form">
             {% csrf_token %}
             {% for field in form %}
-            <div class="flex-1 min-w-[200px] {% if field.name == 'type' %}hidden{% endif %}">
-                <label class="block text-[11px] font-bold text-earth-600 uppercase tracking-wider mb-1.5 ms-1">{{ field.label }}</label>
+            <div class="w-full {% if field.name == 'type' %}hidden{% endif %}">
+                <label class="block text-[10px] sm:text-[11px] font-bold text-earth-600 uppercase tracking-wider mb-1.5 ms-1">{{ field.label }}</label>
                 {{ field }}
                 {% if field.errors %}
-                <p class="text-warmrose-500 text-xs font-medium mt-1">{{ field.errors.0 }}</p>
+                <p class="text-warmrose-500 text-xs font-medium mt-1 ms-1">{{ field.errors.0 }}</p>
                 {% endif %}
             </div>
             {% endfor %}
-            <button type="submit" id="tx-submit" class="w-full md:w-auto bg-terra-500 hover:bg-terra-600 text-white px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md shadow-terra-500/20 active:scale-95 transition-all outline-none text-sm">
-                <span class="material-symbols-outlined text-lg">check</span> Submit
-            </button>
+            <div class="col-span-1 sm:col-span-2 lg:col-span-4 flex justify-end mt-2">
+                <button type="submit" id="tx-submit" class="w-full sm:w-auto bg-terra-500 hover:bg-terra-600 text-white px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md shadow-terra-500/20 active:scale-95 transition-all outline-none text-xs sm:text-sm">
+                    <span class="material-symbols-outlined text-[18px]">check</span> Submit Entry
+                </button>
+            </div>
         </form>
     </section>
 
     <!-- Table Section -->
-    <div class="bg-cream-50 rounded-[2rem] overflow-hidden shadow-sm border border-cream-300">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-cream-200/50">
-                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300">Date & Category</th>
-                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 hidden md:table-cell">Description</th>
-                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 hidden sm:table-cell text-center">Type</th>
-                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 text-right">Amount</th>
-                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="text-sm font-medium divide-y divide-cream-200">
-                {% for txn in transactions %}
-                <tr class="hover:bg-cream-100/80 transition-colors group">
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-3.5">
-                            <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm bg-cream-200 text-earth-700 border border-cream-300">
-                                <span class="material-symbols-outlined text-[18px]">{{ txn.category.icon|default:'category' }}</span>
+    <div class="bg-cream-50 rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-sm border border-cream-300">
+        <div class="overflow-x-auto w-full">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-cream-200/50">
+                        <th class="px-4 sm:px-6 py-3.5 sm:py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300">Date & Category</th>
+                        <th class="px-4 sm:px-6 py-3.5 sm:py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 hidden md:table-cell">Description</th>
+                        <th class="px-4 sm:px-6 py-3.5 sm:py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 hidden sm:table-cell text-center">Type</th>
+                        <th class="px-4 sm:px-6 py-3.5 sm:py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 text-right">Amount</th>
+                        <th class="px-4 sm:px-6 py-3.5 sm:py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm font-medium divide-y divide-cream-200">
+                    {% for txn in transactions %}
+                    <tr class="hover:bg-cream-100/80 transition-colors group">
+                        <td class="px-4 sm:px-6 py-3.5 sm:py-4">
+                            <div class="flex items-center gap-3 sm:gap-3.5">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shadow-sm bg-cream-200 text-earth-700 border border-cream-300 shrink-0">
+                                    <span class="material-symbols-outlined text-[16px] sm:text-[18px]">{{ txn.category.icon|default:'category' }}</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="block font-bold text-earth-900 text-xs sm:text-[14px] group-hover:text-terra-500 transition-colors truncate">{{ txn.category.name|default:'Uncategorized' }}</span>
+                                    <span class="text-[11px] sm:text-xs text-cream-500 mt-0.5 block">{{ txn.date|date:"M d, Y" }}</span>
+                                    <span class="text-[11px] text-earth-600 md:hidden mt-0.5 block truncate max-w-[180px]">{{ txn.description }}</span>
+                                </div>
                             </div>
-                            <div>
-                                <span class="block font-bold text-earth-900 text-[14px] group-hover:text-terra-500 transition-colors">{{ txn.category.name|default:'Uncategorized' }}</span>
-                                <span class="text-xs text-cream-500 mt-0.5">{{ txn.date|date:"M d, Y" }}</span>
+                        </td>
+                        <td class="px-4 sm:px-6 py-3.5 sm:py-4 font-semibold text-earth-700 hidden md:table-cell text-sm">{{ txn.description }}</td>
+                        <td class="px-4 sm:px-6 py-3.5 sm:py-4 hidden sm:table-cell text-center">
+                            {% if txn.type == 'Expense' %}
+                            <span class="bg-warmrose-50 text-warmrose-600 border border-warmrose-200 px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">Expense</span>
+                            {% else %}
+                            <span class="bg-sage-50 text-sage-600 border border-sage-200 px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">Income</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 sm:px-6 py-3.5 sm:py-4 text-right font-bold text-xs sm:text-[14px] {% if txn.type == 'Expense' %}text-warmrose-600{% else %}text-sage-600{% endif %} whitespace-nowrap tabular-nums">
+                            {% if txn.type == 'Expense' %}-{% else %}+{% endif %}₹{{ txn.amount }}
+                        </td>
+                        <td class="px-4 sm:px-6 py-3.5 sm:py-4 text-center">
+                            <form method="post" action="{% url 'expansio_delete_transaction' txn.pk %}" class="inline-block">
+                                {% csrf_token %}
+                                <button type="submit" class="text-cream-500 hover:text-warmrose-600 hover:bg-warmrose-50 p-2 rounded-xl transition-colors flex items-center justify-center mx-auto active:scale-95 min-w-[36px] min-h-[36px]" onclick="return confirm('Are you sure you want to delete this transaction for ₹{{ txn.amount }}?');" title="Delete Entry">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="py-16 sm:py-20 text-center">
+                            <div class="flex flex-col items-center justify-center">
+                                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-cream-200 border border-cream-300 rounded-2xl flex items-center justify-center mb-3 shadow-sm">
+                                    <span class="material-symbols-outlined text-2xl sm:text-3xl text-cream-400">receipt_long</span>
+                                </div>
+                                <h3 class="text-lg sm:text-xl font-bold text-earth-900 mb-1">No Entries Yet</h3>
+                                <p class="text-earth-600 text-xs max-w-sm px-4">Use the form above to add your first financial transaction.</p>
                             </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 font-semibold text-earth-700 hidden md:table-cell text-sm">{{ txn.description }}</td>
-                    <td class="px-6 py-4 hidden sm:table-cell text-center">
-                        {% if txn.type == 'Expense' %}
-                        <span class="bg-warmrose-50 text-warmrose-600 border border-warmrose-200 px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">Expense</span>
-                        {% else %}
-                        <span class="bg-sage-50 text-sage-600 border border-sage-200 px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">Income</span>
-                        {% endif %}
-                    </td>
-                    <td class="px-6 py-4 text-right font-bold text-[14px] {% if txn.type == 'Expense' %}text-warmrose-600{% else %}text-sage-600{% endif %}">
-                        {% if txn.type == 'Expense' %}-{% else %}+{% endif %}₹{{ txn.amount }}
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <form method="post" action="{% url 'expansio_delete_transaction' txn.pk %}" class="inline-block">
-                            {% csrf_token %}
-                            <button type="submit" class="text-cream-500 hover:text-warmrose-600 hover:bg-warmrose-50 p-2 rounded-xl transition-colors flex items-center justify-center mx-auto active:scale-95" onclick="return confirm('Are you sure you want to delete this transaction for ₹{{ txn.amount }}?');" title="Delete Entry">
-                                <span class="material-symbols-outlined text-[18px]">delete</span>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="py-20 text-center">
-                        <div class="flex flex-col items-center justify-center">
-                            <div class="w-16 h-16 bg-cream-200 border border-cream-300 rounded-2xl flex items-center justify-center mb-3 shadow-sm">
-                                <span class="material-symbols-outlined text-3xl text-cream-400">receipt_long</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-earth-900 mb-1">No Entries Yet</h3>
-                            <p class="text-earth-600 text-xs max-w-sm">Use the form above to add your first financial transaction.</p>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

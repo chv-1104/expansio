@@ -2,80 +2,80 @@
 {% block title %}Categories{% endblock %}
 
 {% block content %}
-<div class="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8">
+<div class="p-3.5 sm:p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8">
     <!-- Page Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-2 md:mt-0">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mt-1 md:mt-0">
         <div>
             <span class="text-xs font-bold uppercase tracking-[0.2em] text-earth-600 mb-1 block">Management</span>
-            <h1 class="text-3xl md:text-4xl font-extrabold text-earth-900 tracking-tight">Spending Categories</h1>
-            <p class="text-earth-600 font-medium text-sm mt-1 max-w-md">Organize your financial flows with precise categorization for better insights.</p>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-earth-900 tracking-tight">Spending Categories</h1>
+            <p class="text-earth-600 font-medium text-xs sm:text-sm mt-1 max-w-md">Organize your financial flows with precise categorization for better insights.</p>
         </div>
     </div>
     
     <!-- Add Category Form -->
-    <div class="bg-cream-50 rounded-[2rem] p-6 md:p-8 shadow-sm border border-cream-300">
-        <h3 class="text-lg font-bold text-earth-900 mb-5 flex items-center gap-2">
+    <div class="bg-cream-50 rounded-2xl sm:rounded-[2rem] p-5 sm:p-7 md:p-8 shadow-sm border border-cream-300">
+        <h3 class="text-base sm:text-lg font-bold text-earth-900 mb-4 sm:mb-5 flex items-center gap-2">
             <span class="material-symbols-outlined text-terra-500">add_circle</span> Create New Category
         </h3>
-        <form method="post" class="flex flex-col md:flex-row items-end gap-4">
+        <form method="post" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-4 items-end">
             {% csrf_token %}
             {% for field in form %}
-            <div class="flex-1 w-full">
-                <label class="block text-[11px] font-bold text-earth-600 uppercase tracking-wider mb-1.5 ms-1">{{ field.label }}</label>
+            <div class="w-full">
+                <label class="block text-[10px] sm:text-[11px] font-bold text-earth-600 uppercase tracking-wider mb-1.5 ms-1">{{ field.label }}</label>
                 {{ field }}
                 {% if field.errors %}
-                <p class="text-warmrose-500 text-xs mt-1 font-medium">{{ field.errors.0 }}</p>
+                <p class="text-warmrose-500 text-xs mt-1 font-medium ms-1">{{ field.errors.0 }}</p>
                 {% endif %}
             </div>
             {% endfor %}
-            <button type="submit" class="w-full md:w-auto bg-terra-500 text-white px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md shadow-terra-500/20 hover:bg-terra-600 active:scale-95 transition-all outline-none text-sm">
+            <button type="submit" class="w-full bg-terra-500 text-white px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md shadow-terra-500/20 hover:bg-terra-600 active:scale-95 transition-all outline-none text-xs sm:text-sm col-span-1 sm:col-span-2 md:col-span-1">
                 Add Category
             </button>
         </form>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
         <!-- Main Content: Category List -->
         <div class="lg:col-span-8 space-y-4">
-            <div class="bg-cream-50 rounded-[2rem] overflow-hidden shadow-sm border border-cream-300">
+            <div class="bg-cream-50 rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-sm border border-cream-300">
                 <div class="w-full">
                     <!-- Table Header -->
-                    <div class="grid grid-cols-12 px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 bg-cream-200/50">
-                        <div class="col-span-8">Category Detail</div>
-                        <div class="col-span-4 text-right">Type</div>
+                    <div class="grid grid-cols-12 px-4 sm:px-6 py-3.5 sm:py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-earth-600 border-b border-cream-300 bg-cream-200/50">
+                        <div class="col-span-7 sm:col-span-8">Category Detail</div>
+                        <div class="col-span-5 sm:col-span-4 text-right">Type & Action</div>
                     </div>
                     <!-- Table Rows -->
                     <div class="divide-y divide-cream-200">
                         {% for category in categories %}
-                        <div class="grid grid-cols-12 px-6 py-4 items-center hover:bg-cream-100/80 transition-colors duration-200 group">
-                            <div class="col-span-7 sm:col-span-8 flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm bg-cream-200 text-earth-700 border border-cream-300">
-                                    <span class="material-symbols-outlined text-[20px]">{{ category.icon|default:'category' }}</span>
+                        <div class="grid grid-cols-12 px-4 sm:px-6 py-3.5 sm:py-4 items-center hover:bg-cream-100/80 transition-colors duration-200 group">
+                            <div class="col-span-7 sm:col-span-8 flex items-center gap-3 sm:gap-3.5">
+                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-sm bg-cream-200 text-earth-700 border border-cream-300 shrink-0">
+                                    <span class="material-symbols-outlined text-[18px] sm:text-[20px]">{{ category.icon|default:'category' }}</span>
                                 </div>
-                                <div>
-                                    <p class="font-bold text-earth-900 text-base group-hover:text-terra-500 transition-colors">{{ category.name }}</p>
+                                <div class="min-w-0">
+                                    <p class="font-bold text-earth-900 text-xs sm:text-base group-hover:text-terra-500 transition-colors truncate">{{ category.name }}</p>
                                 </div>
                             </div>
-                            <div class="col-span-5 sm:col-span-4 text-right flex justify-end items-center gap-2 sm:gap-3">
+                            <div class="col-span-5 sm:col-span-4 text-right flex justify-end items-center gap-1.5 sm:gap-3">
                                 {% if category.type == 'Expense' %}
-                                <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-warmrose-50 text-warmrose-600 uppercase border border-warmrose-200">Expense</span>
+                                <span class="px-2 py-0.5 rounded-lg text-[9px] sm:text-[10px] font-bold bg-warmrose-50 text-warmrose-600 uppercase border border-warmrose-200 whitespace-nowrap">Expense</span>
                                 {% else %}
-                                <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-sage-50 text-sage-600 uppercase border border-sage-200">Income</span>
+                                <span class="px-2 py-0.5 rounded-lg text-[9px] sm:text-[10px] font-bold bg-sage-50 text-sage-600 uppercase border border-sage-200 whitespace-nowrap">Income</span>
                                 {% endif %}
                                 <form action="{% url 'expansio_delete_category' category.pk %}" method="post" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
                                     {% csrf_token %}
-                                    <button type="submit" class="text-cream-500 hover:text-warmrose-600 hover:bg-warmrose-50 p-2 rounded-xl transition-all flex items-center justify-center active:scale-95" title="Delete Category">
+                                    <button type="submit" class="text-cream-500 hover:text-warmrose-600 hover:bg-warmrose-50 p-2 rounded-xl transition-all flex items-center justify-center active:scale-95 min-w-[36px] min-h-[36px]" title="Delete Category">
                                         <span class="material-symbols-outlined text-[18px]">delete</span>
                                     </button>
                                 </form>
                             </div>
                         </div>
                         {% empty %}
-                        <div class="p-14 text-center text-earth-600">
-                            <div class="w-16 h-16 bg-cream-200 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-cream-300">
-                                <span class="material-symbols-outlined text-cream-400 text-3xl">category</span>
+                        <div class="p-10 sm:p-14 text-center text-earth-600">
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 bg-cream-200 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-cream-300">
+                                <span class="material-symbols-outlined text-cream-400 text-2xl sm:text-3xl">category</span>
                             </div>
-                            <p class="font-bold text-earth-900 mb-0.5">No categories added yet.</p>
+                            <p class="font-bold text-earth-900 mb-0.5 text-sm sm:text-base">No categories added yet.</p>
                             <p class="text-xs">Create one above to get started.</p>
                         </div>
                         {% endfor %}
@@ -86,7 +86,7 @@
         
         <!-- Sidebar Content: Summary & Tips -->
         <div class="lg:col-span-4 space-y-6">
-            <div class="bg-gradient-to-br from-earth-800 to-earth-900 rounded-[2rem] p-7 text-white relative overflow-hidden shadow-lg shadow-earth-900/10">
+            <div class="bg-gradient-to-br from-earth-800 to-earth-900 rounded-2xl sm:rounded-[2rem] p-5 sm:p-7 text-white relative overflow-hidden shadow-lg shadow-earth-900/10">
                 <div class="absolute top-[-2rem] right-[-2rem] p-8 opacity-10 blur-[2px]">
                     <span class="material-symbols-outlined text-9xl text-terra-100">donut_large</span>
                 </div>
@@ -94,7 +94,7 @@
                     <span class="w-2 h-2 rounded-full bg-golden-500 animate-pulse"></span> Finance Insight
                 </h4>
                 <div class="space-y-4 relative z-10">
-                    <p class="text-[14px] font-medium leading-relaxed italic text-cream-200">"Clarity in categorization is the foundation of financial control. Keep your categories distinct and actionable."</p>
+                    <p class="text-xs sm:text-[14px] font-medium leading-relaxed italic text-cream-200">"Clarity in categorization is the foundation of financial control. Keep your categories distinct and actionable."</p>
                 </div>
             </div>
         </div>

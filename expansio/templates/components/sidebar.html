@@ -1,103 +1,112 @@
 {% load static %}
 
 <aside
-    class="hidden md:flex flex-col h-screen sticky top-0 left-0 border-r border-cream-300 bg-cream-200 w-72 p-6 gap-2 transition-all duration-300 ease-in-out z-50">
+    class="hidden md:flex flex-col h-screen sticky top-0 left-0 border-r border-cream-300 bg-cream-200 md:w-60 lg:w-72 p-4 lg:p-6 gap-2 transition-all duration-300 ease-in-out z-40 shrink-0">
     <a href="{% url 'expansio_dashboard' %}"
-        class="flex items-center gap-3.5 mb-8 mt-2 hover:opacity-90 transition-all px-2 group">
-        <div class="w-11 h-11 rounded-2xl bg-cream-50 flex items-center justify-center shadow-sm border border-cream-300 flex-shrink-0 group-hover:scale-105 transition-transform overflow-hidden p-1">
+        class="flex items-center gap-3 mb-6 lg:mb-8 mt-2 hover:opacity-90 transition-all px-1 lg:px-2 group">
+        <div class="w-10 h-10 lg:w-11 lg:h-11 rounded-2xl bg-cream-50 flex items-center justify-center shadow-sm border border-cream-300 shrink-0 group-hover:scale-105 transition-transform overflow-hidden p-1">
             <img src="{% static 'img/favicon.png' %}" alt="Expansio" class="w-full h-full object-contain rounded-xl">
         </div>
-        <div>
-            <h2 class="font-bold text-2xl text-earth-900 leading-tight tracking-tight">Expansio</h2>
-            <p class="text-[0.65rem] uppercase tracking-[0.18em] text-earth-600 font-bold">Personal Finance</p>
+        <div class="min-w-0">
+            <h2 class="font-bold text-xl lg:text-2xl text-earth-900 leading-tight tracking-tight truncate">Expansio</h2>
+            <p class="text-[0.6rem] lg:text-[0.65rem] uppercase tracking-[0.18em] text-earth-600 font-bold truncate">Personal Finance</p>
         </div>
     </a>
 
-    <nav class="flex-1 flex flex-col gap-1.5">
+    <nav class="flex-1 flex flex-col gap-1 overflow-y-auto">
         <a href="{% url 'expansio_dashboard' %}"
-            class="flex items-center gap-3.5 px-4 py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_dashboard' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
-            <span class="material-symbols-outlined text-[22px] {% if request.resolver_match.url_name == 'expansio_dashboard' %}text-terra-500{% endif %}">dashboard</span>
-            <span class="text-sm">Dashboard</span>
+            class="flex items-center gap-3 px-3.5 py-2.5 lg:px-4 lg:py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_dashboard' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
+            <span class="material-symbols-outlined text-[20px] lg:text-[22px] {% if request.resolver_match.url_name == 'expansio_dashboard' %}text-terra-500{% endif %}">dashboard</span>
+            <span class="text-xs lg:text-sm">Dashboard</span>
         </a>
         <a href="{% url 'expansio_transactions' %}"
-            class="flex items-center gap-3.5 px-4 py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_transactions' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
-            <span class="material-symbols-outlined text-[22px] {% if request.resolver_match.url_name == 'expansio_transactions' %}text-terra-500{% endif %}">receipt_long</span>
-            <span class="text-sm">Ledger</span>
+            class="flex items-center gap-3 px-3.5 py-2.5 lg:px-4 lg:py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_transactions' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
+            <span class="material-symbols-outlined text-[20px] lg:text-[22px] {% if request.resolver_match.url_name == 'expansio_transactions' %}text-terra-500{% endif %}">receipt_long</span>
+            <span class="text-xs lg:text-sm">Ledger</span>
         </a>
         <a href="{% url 'expansio_categories' %}"
-            class="flex items-center gap-3.5 px-4 py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_categories' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
-            <span class="material-symbols-outlined text-[22px] {% if request.resolver_match.url_name == 'expansio_categories' %}text-terra-500{% endif %}">category</span>
-            <span class="text-sm">Categories</span>
+            class="flex items-center gap-3 px-3.5 py-2.5 lg:px-4 lg:py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_categories' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
+            <span class="material-symbols-outlined text-[20px] lg:text-[22px] {% if request.resolver_match.url_name == 'expansio_categories' %}text-terra-500{% endif %}">category</span>
+            <span class="text-xs lg:text-sm">Categories</span>
         </a>
         <a href="{% url 'expansio_budgets' %}"
-            class="flex items-center gap-3.5 px-4 py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_budgets' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
-            <span class="material-symbols-outlined text-[22px] {% if request.resolver_match.url_name == 'expansio_budgets' %}text-terra-500{% endif %}">pie_chart</span>
-            <span class="text-sm">Budgets</span>
+            class="flex items-center gap-3 px-3.5 py-2.5 lg:px-4 lg:py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_budgets' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
+            <span class="material-symbols-outlined text-[20px] lg:text-[22px] {% if request.resolver_match.url_name == 'expansio_budgets' %}text-terra-500{% endif %}">pie_chart</span>
+            <span class="text-xs lg:text-sm">Budgets</span>
         </a>
         <a href="{% url 'expansio_reports' %}"
-            class="flex items-center gap-3.5 px-4 py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_reports' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
-            <span class="material-symbols-outlined text-[22px] {% if request.resolver_match.url_name == 'expansio_reports' %}text-terra-500{% endif %}">analytics</span>
-            <span class="text-sm">Reports</span>
+            class="flex items-center gap-3 px-3.5 py-2.5 lg:px-4 lg:py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_reports' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
+            <span class="material-symbols-outlined text-[20px] lg:text-[22px] {% if request.resolver_match.url_name == 'expansio_reports' %}text-terra-500{% endif %}">analytics</span>
+            <span class="text-xs lg:text-sm">Reports</span>
         </a>
         <a href="{% url 'expansio_emi' %}"
-            class="flex items-center gap-3.5 px-4 py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_emi' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
-            <span class="material-symbols-outlined text-[22px] {% if request.resolver_match.url_name == 'expansio_emi' %}text-terra-500{% endif %}">credit_score</span>
-            <span class="text-sm">EMI Tracker</span>
+            class="flex items-center gap-3 px-3.5 py-2.5 lg:px-4 lg:py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_emi' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
+            <span class="material-symbols-outlined text-[20px] lg:text-[22px] {% if request.resolver_match.url_name == 'expansio_emi' %}text-terra-500{% endif %}">credit_score</span>
+            <span class="text-xs lg:text-sm">EMI Tracker</span>
         </a>
         <a href="{% url 'expansio_profile' %}"
-            class="flex items-center gap-3.5 px-4 py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_profile' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
-            <span class="material-symbols-outlined text-[22px] {% if request.resolver_match.url_name == 'expansio_profile' %}text-terra-500{% endif %}">person</span>
-            <span class="text-sm">Profile</span>
+            class="flex items-center gap-3 px-3.5 py-2.5 lg:px-4 lg:py-3 text-earth-600 hover:text-earth-900 hover:bg-cream-300/70 rounded-2xl transition-all duration-200 font-medium {% if request.resolver_match.url_name == 'expansio_profile' %}bg-cream-300 text-earth-900 font-bold shadow-sm{% endif %}">
+            <span class="material-symbols-outlined text-[20px] lg:text-[22px] {% if request.resolver_match.url_name == 'expansio_profile' %}text-terra-500{% endif %}">person</span>
+            <span class="text-xs lg:text-sm">Profile</span>
         </a>
     </nav>
 
-    <div class="mt-auto pt-6 border-t border-cream-300 flex flex-col gap-2">
+    <div class="mt-auto pt-4 lg:pt-6 border-t border-cream-300 flex flex-col gap-2">
         <a href="{% url 'expansio_transactions' %}"
-            class="w-full bg-terra-500 hover:bg-terra-600 text-white flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm shadow-md shadow-terra-500/20 hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all mb-3">
-            <span class="material-symbols-outlined text-[20px]">add</span> Add Record
+            class="w-full bg-terra-500 hover:bg-terra-600 text-white flex items-center justify-center gap-2 py-3 lg:py-3.5 rounded-2xl font-bold text-xs lg:text-sm shadow-md shadow-terra-500/20 hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all mb-2">
+            <span class="material-symbols-outlined text-[18px] lg:text-[20px]">add</span> Add Record
         </a>
         <form method="post" action="{% url 'expansio_logout' %}">
             {% csrf_token %}
-            <button type="submit" class="w-full flex items-center gap-3.5 px-4 py-2.5 text-earth-600 hover:text-warmrose-600 hover:bg-warmrose-50 rounded-2xl transition-all duration-200 text-sm font-semibold group">
-                <span class="material-symbols-outlined transition-all text-[20px]">logout</span>
+            <button type="submit" class="w-full flex items-center gap-3 px-3.5 py-2 lg:px-4 lg:py-2.5 text-earth-600 hover:text-warmrose-600 hover:bg-warmrose-50 rounded-2xl transition-all duration-200 text-xs lg:text-sm font-semibold group">
+                <span class="material-symbols-outlined transition-all text-[18px] lg:text-[20px]">logout</span>
                 Exit Session
             </button>
         </form>
     </div>
 </aside>
 
-<!-- Mobile Bottom Navbar -->
+<!-- Mobile Bottom Navigation Bar -->
 <nav
-    class="md:hidden fixed bottom-0 left-0 right-0 bg-cream-200/95 backdrop-blur-lg border-t border-cream-300 shadow-[0_-8px_30px_rgb(44,36,24,0.06)] px-6 py-3.5 flex justify-between items-center z-50 rounded-t-3xl">
+    class="md:hidden fixed bottom-0 left-0 right-0 bg-cream-200/95 backdrop-blur-xl border-t border-cream-300 shadow-[0_-8px_30px_rgb(44,36,24,0.08)] px-2 sm:px-6 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex justify-around items-center z-50 rounded-t-3xl">
     <a href="{% url 'expansio_dashboard' %}"
-        class="flex flex-col items-center gap-1 {% if request.resolver_match.url_name == 'expansio_dashboard' %}text-terra-500{% else %}text-cream-500{% endif %}">
-        <span class="material-symbols-outlined"
+        class="flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all active:scale-90 {% if request.resolver_match.url_name == 'expansio_dashboard' %}text-terra-500 font-bold{% else %}text-cream-500 hover:text-earth-700{% endif %}">
+        <span class="material-symbols-outlined text-[22px]"
             style="font-variation-settings: 'FILL' {% if request.resolver_match.url_name == 'expansio_dashboard' %}1{% else %}0{% endif %};">dashboard</span>
+        <span class="text-[9px] tracking-tight">Home</span>
     </a>
     <a href="{% url 'expansio_transactions' %}"
-        class="flex flex-col items-center gap-1 {% if request.resolver_match.url_name == 'expansio_transactions' %}text-terra-500{% else %}text-cream-500{% endif %}">
-        <span class="material-symbols-outlined"
+        class="flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all active:scale-90 {% if request.resolver_match.url_name == 'expansio_transactions' %}text-terra-500 font-bold{% else %}text-cream-500 hover:text-earth-700{% endif %}">
+        <span class="material-symbols-outlined text-[22px]"
             style="font-variation-settings: 'FILL' {% if request.resolver_match.url_name == 'expansio_transactions' %}1{% else %}0{% endif %};">receipt_long</span>
+        <span class="text-[9px] tracking-tight">Ledger</span>
     </a>
-    <div class="relative -top-7">
+
+    <!-- Center Floating Action Button -->
+    <div class="relative -top-5 shrink-0 px-1">
         <a href="{% url 'expansio_transactions' %}"
-            class="bg-terra-500 hover:bg-terra-600 text-white w-14 h-14 rounded-full shadow-lg shadow-terra-500/30 flex items-center justify-center active:scale-95 transition-transform border-[4px] border-cream-100">
-            <span class="material-symbols-outlined text-2xl">add</span>
+            class="bg-terra-500 hover:bg-terra-600 text-white w-12 h-12 sm:w-13 sm:h-13 rounded-full shadow-lg shadow-terra-500/40 flex items-center justify-center active:scale-90 transition-transform border-[3px] border-cream-100"
+            title="Add Transaction">
+            <span class="material-symbols-outlined text-2xl font-bold">add</span>
         </a>
     </div>
+
     <a href="{% url 'expansio_budgets' %}"
-        class="flex flex-col items-center gap-1 {% if request.resolver_match.url_name == 'expansio_budgets' %}text-terra-500{% else %}text-cream-500{% endif %}">
-        <span class="material-symbols-outlined"
+        class="flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all active:scale-90 {% if request.resolver_match.url_name == 'expansio_budgets' %}text-terra-500 font-bold{% else %}text-cream-500 hover:text-earth-700{% endif %}">
+        <span class="material-symbols-outlined text-[22px]"
             style="font-variation-settings: 'FILL' {% if request.resolver_match.url_name == 'expansio_budgets' %}1{% else %}0{% endif %};">pie_chart</span>
+        <span class="text-[9px] tracking-tight">Budgets</span>
+    </a>
+    <a href="{% url 'expansio_reports' %}"
+        class="flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all active:scale-90 {% if request.resolver_match.url_name == 'expansio_reports' %}text-terra-500 font-bold{% else %}text-cream-500 hover:text-earth-700{% endif %}">
+        <span class="material-symbols-outlined text-[22px]"
+            style="font-variation-settings: 'FILL' {% if request.resolver_match.url_name == 'expansio_reports' %}1{% else %}0{% endif %};">analytics</span>
+        <span class="text-[9px] tracking-tight">Reports</span>
     </a>
     <a href="{% url 'expansio_emi' %}"
-        class="flex flex-col items-center gap-1 {% if request.resolver_match.url_name == 'expansio_emi' %}text-terra-500{% else %}text-cream-500{% endif %}">
-        <span class="material-symbols-outlined"
+        class="flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all active:scale-90 {% if request.resolver_match.url_name == 'expansio_emi' %}text-terra-500 font-bold{% else %}text-cream-500 hover:text-earth-700{% endif %}">
+        <span class="material-symbols-outlined text-[22px]"
             style="font-variation-settings: 'FILL' {% if request.resolver_match.url_name == 'expansio_emi' %}1{% else %}0{% endif %};">credit_score</span>
-    </a>
-    <a href="{% url 'expansio_categories' %}"
-        class="flex flex-col items-center gap-1 {% if request.resolver_match.url_name == 'expansio_categories' %}text-terra-500{% else %}text-cream-500{% endif %}">
-        <span class="material-symbols-outlined"
-            style="font-variation-settings: 'FILL' {% if request.resolver_match.url_name == 'expansio_categories' %}1{% else %}0{% endif %};">category</span>
+        <span class="text-[9px] tracking-tight">EMI</span>
     </a>
 </nav>
